@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2025-12-13
+
+### Added
+- Current Monitor Refresh Rate extension attribute script
+  - Reports refresh rate of main display using `system_profiler SPDisplaysDataType`
+  - Detects ProMotion (120Hz) and standard (60Hz) refresh rates
+  - Returns: "XX Hertz" format (e.g., "120 Hertz", "60 Hertz") or "Unable to Detect"
+  - Helps ensure ProMotion MacBook Pros aren't locked to lower refresh rates
+  - Common use case: Verify creative workstations are utilizing premium display hardware correctly
+- Updated README.md with documentation for Monitor Refresh Rate script
+  - Script details and detection methodology
+  - Use case explanation for ProMotion and external displays
+  - Smart Group suggestions for display configuration monitoring
+
+### Changed
+- Updated repository version to 1.3.0
+
 ## [1.2.0] - 2025-12-13
 
 ### Added

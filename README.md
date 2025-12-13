@@ -90,6 +90,27 @@ Edit the `WATTAGE_THRESHOLD` variable in the script to adjust the minimum accept
 **Use Case:**
 Users often experience performance degradation or battery drain while plugged in because they're using underpowered USB-C accessories. This extension attribute helps identify these situations proactively. Create a Smart Group for devices with low wattage detection to send notifications to users or IT teams, or include in helpdesk workflows when troubleshooting performance complaints.
 
+### 4. Current Monitor Refresh Rate
+
+**File:** `extension-attributes/monitor-refresh-rate.sh`
+
+**Description:**
+Reports the current refresh rate of the main display. Ensures ProMotion-capable MacBook Pros (120Hz) aren't accidentally locked to 60Hz and that external displays are running at optimal settings.
+
+**Detection Method:**
+- Queries `system_profiler SPDisplaysDataType` for display information
+- Extracts refresh rate from display metadata
+- Focuses on the main/primary display
+
+**Possible Results:**
+- `120 Hertz` - ProMotion or high refresh rate active
+- `60 Hertz` - Standard refresh rate
+- `XX Hertz` - Other refresh rate detected
+- `Unable to Detect` - Cannot determine refresh rate
+
+**Use Case:**
+Creative agencies and organizations that invest in ProMotion MacBook Pros (120Hz displays) need to ensure users aren't accidentally running at lower refresh rates, which defeats the purpose of the premium hardware. External display users can also benefit from verifying optimal display settings. Create a Smart Group for devices not running at expected refresh rates to identify configuration issues or send reminders to users about display settings.
+
 ## Installation
 
 ### Adding to Jamf Pro
@@ -168,5 +189,5 @@ See [LICENSE](LICENSE) file for details.
 
 ## Version
 
-Current version: 1.2.0
+Current version: 1.3.0
 See [CHANGELOG.md](CHANGELOG.md) for version history.
