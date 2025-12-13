@@ -111,6 +111,36 @@ Reports the current refresh rate of the main display. Ensures ProMotion-capable 
 **Use Case:**
 Creative agencies and organizations that invest in ProMotion MacBook Pros (120Hz displays) need to ensure users aren't accidentally running at lower refresh rates, which defeats the purpose of the premium hardware. External display users can also benefit from verifying optimal display settings. Create a Smart Group for devices not running at expected refresh rates to identify configuration issues or send reminders to users about display settings.
 
+### 5. Default Web Browser
+
+**File:** `extension-attributes/default-web-browser.sh`
+
+**Description:**
+Identifies which web browser is set as the default system-wide handler for HTTP/HTTPS URLs. Essential for application compatibility planning, security policy enforcement, and software standardization tracking.
+
+**Detection Method:**
+- Primary: Uses Python with Foundation/AppKit frameworks to query LaunchServices
+- Fallback: Reads LaunchServices preferences using PlistBuddy
+- Parses bundle identifier and converts to human-readable browser name
+
+**Possible Results:**
+- `Safari` - Apple Safari browser
+- `Chrome` - Google Chrome
+- `Firefox` - Mozilla Firefox
+- `Edge` - Microsoft Edge
+- `Brave` - Brave Browser
+- `Arc` - Arc Browser
+- `Opera` - Opera browser
+- `Vivaldi` - Vivaldi browser
+- `Chromium` - Chromium browser
+- `Safari Technology Preview` - Apple's beta Safari
+- `Firefox Developer Edition` - Mozilla's developer browser
+- `Chrome Canary` - Google's beta Chrome
+- `Unknown` - Unrecognized browser or no default set
+
+**Use Case:**
+Organizations need to track browser adoption for application compatibility testing, security policy enforcement, and standardization initiatives. Some web applications only support specific browsers, making it critical to identify devices that may have compatibility issues. Create Smart Groups based on browser type to scope browser-specific policies, deploy extensions, or send communications about supported browsers. Also useful for measuring the success of browser migration projects.
+
 ## Installation
 
 ### Adding to Jamf Pro
@@ -189,5 +219,5 @@ See [LICENSE](LICENSE) file for details.
 
 ## Version
 
-Current version: 1.3.0
+Current version: 1.4.0
 See [CHANGELOG.md](CHANGELOG.md) for version history.

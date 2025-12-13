@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2025-12-13
+
+### Added
+- Default Web Browser extension attribute script
+  - Identifies default system-wide HTTP/HTTPS URL handler using LaunchServices
+  - Primary method: Python with Foundation/AppKit frameworks
+  - Fallback method: PlistBuddy for LaunchServices preferences
+  - Recognizes 12+ popular browsers (Safari, Chrome, Firefox, Edge, Brave, Arc, Opera, Vivaldi, etc.)
+  - Returns human-readable browser names or "Unknown" for unrecognized browsers
+  - Common use cases:
+    - Application compatibility planning and testing
+    - Security policy enforcement
+    - Software standardization tracking
+    - Browser migration project measurement
+- Updated README.md with documentation for Default Web Browser script
+  - Comprehensive list of supported browsers
+  - Detection methodology explanation
+  - Use cases for compatibility and policy enforcement
+  - Smart Group suggestions for browser-specific policies
+
+### Changed
+- Updated repository version to 1.4.0
+
 ## [1.3.0] - 2025-12-13
 
 ### Added
