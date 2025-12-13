@@ -41,6 +41,31 @@ Edit the `RAM_THRESHOLD_GB` variable in the script to adjust RAM requirements (d
 **Use Case:**
 Identify which devices in your fleet can run Apple Intelligence features before scoping policies or OS upgrades. Useful for planning deployments and setting user expectations.
 
+### 2. Orphaned Home Directory Detector
+
+**File:** `extension-attributes/orphaned-home-directories.sh`
+
+**Description:**
+Identifies home directories in `/Users/` that no longer have corresponding user accounts. Helps administrators locate and reclaim disk space from deleted or reassigned accounts.
+
+**Directories Checked:**
+- All directories in `/Users/` except:
+  - `Shared`
+  - `Guest`
+  - Hidden directories (starting with `.`)
+
+**Possible Results:**
+- `None` - No orphaned directories found
+- `username1, username2, ...` - Comma-separated list of orphaned directory names
+
+**How It Works:**
+1. Lists all directories in `/Users/`
+2. For each directory, checks if a corresponding user account exists using `id -u [username]`
+3. Reports directories where the user account no longer exists
+
+**Use Case:**
+When computers are reassigned or users leave the organization, local accounts are often deleted but home folders remain behind, consuming significant disk space. This extension attribute helps identify these orphaned directories for cleanup. Create a Smart Group for devices with orphaned directories to scope a cleanup policy or generate reports for manual review.
+
 ## Installation
 
 ### Adding to Jamf Pro
@@ -119,5 +144,5 @@ See [LICENSE](LICENSE) file for details.
 
 ## Version
 
-Current version: 1.0.0
+Current version: 1.1.0
 See [CHANGELOG.md](CHANGELOG.md) for version history.
