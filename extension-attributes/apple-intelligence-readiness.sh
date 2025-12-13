@@ -16,7 +16,7 @@
 ###   - "Not Supported (Intel)" - Device has Intel processor
 ###   - "Not Supported (Low RAM)" - Apple Silicon but insufficient RAM
 ###
-### Author: Jamf Admin
+### Author: Josh Gilmour <josh@joshgilmour.com>
 ### Created: 2025-12-13
 ### Version: 1.0.0
 ###
