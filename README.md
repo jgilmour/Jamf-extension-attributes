@@ -141,6 +141,41 @@ Identifies which web browser is set as the default system-wide handler for HTTP/
 **Use Case:**
 Organizations need to track browser adoption for application compatibility testing, security policy enforcement, and standardization initiatives. Some web applications only support specific browsers, making it critical to identify devices that may have compatibility issues. Create Smart Groups based on browser type to scope browser-specific policies, deploy extensions, or send communications about supported browsers. Also useful for measuring the success of browser migration projects.
 
+### 6. VPN Client Auto-Connect Status
+
+**File:** `extension-attributes/vpn-auto-connect-status.sh`
+
+**Description:**
+Checks if enterprise VPN clients are configured to auto-connect on startup. Ensures remote workers maintain security posture by automatically connecting to corporate VPN when starting their devices.
+
+**Supported VPN Clients:**
+- Cisco AnyConnect
+- Palo Alto GlobalProtect
+- Fortinet FortiClient
+- Zscaler
+- Pulse Secure
+- OpenVPN/Tunnelblick
+- Sophos Connect
+- SonicWall NetExtender
+- Check Point VPN
+- Cloudflare WARP
+
+**Detection Method:**
+- Checks if each VPN client application is installed
+- Reads client-specific preference files and configurations
+- Determines auto-connect/connect-on-demand settings
+- Reports status for all installed VPN clients
+
+**Possible Results:**
+- `Not Installed` - No supported VPN clients found
+- `[VPN Name]: Enabled` - Auto-connect is enabled (e.g., "Cisco AnyConnect: Enabled")
+- `[VPN Name]: Disabled` - Auto-connect is disabled
+- `[VPN Name]: Unknown` - VPN installed but auto-connect status cannot be determined
+- Multiple VPNs: `Cisco AnyConnect: Enabled, GlobalProtect: Disabled`
+
+**Use Case:**
+Remote and hybrid workforces require consistent VPN connectivity to access corporate resources securely. This extension attribute helps IT teams verify that VPN clients are properly configured for automatic connection, reducing security risks from users forgetting to connect manually. Create Smart Groups for devices with disabled auto-connect to send reminders, deploy configuration profiles, or generate compliance reports. Essential for security policy enforcement and audit requirements.
+
 ## Installation
 
 ### Adding to Jamf Pro
@@ -219,5 +254,5 @@ See [LICENSE](LICENSE) file for details.
 
 ## Version
 
-Current version: 1.4.0
+Current version: 1.5.0
 See [CHANGELOG.md](CHANGELOG.md) for version history.
