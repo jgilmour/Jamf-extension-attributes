@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-12-13
+
+### Added
+- Slow Charging Detection (Wattage Mismatch) extension attribute script
+  - Detects underpowered charging adapters using `system_profiler SPPowerDataType`
+  - Extracts and compares actual charger wattage against configurable threshold (default: 45W)
+  - Returns: "Normal", "Low Wattage Detected (XXW)", "Not Charging", or "Unable to Detect"
+  - Helps identify performance issues caused by USB-C hubs, phone chargers, or inadequate power adapters
+  - Common use case: Proactively address user complaints about battery drain or performance while plugged in
+- Updated README.md with documentation for Slow Charging Detection script
+  - Script details and detection method
+  - Configuration options for wattage threshold
+  - Smart Group suggestions for helpdesk workflows
+  - Reference wattages for common MacBook models
+
+### Changed
+- Updated repository version to 1.2.0
+
 ## [1.1.0] - 2025-12-13
 
 ### Added

@@ -66,6 +66,30 @@ Identifies home directories in `/Users/` that no longer have corresponding user 
 **Use Case:**
 When computers are reassigned or users leave the organization, local accounts are often deleted but home folders remain behind, consuming significant disk space. This extension attribute helps identify these orphaned directories for cleanup. Create a Smart Group for devices with orphaned directories to scope a cleanup policy or generate reports for manual review.
 
+### 3. Slow Charging Detection (Wattage Mismatch)
+
+**File:** `extension-attributes/slow-charging-detection.sh`
+
+**Description:**
+Detects when a Mac is charging with an underpowered adapter that may cause performance issues or battery drain during use. Identifies users who are using USB-C hubs, phone chargers, or other low-wattage adapters instead of their MacBook's proper power adapter.
+
+**Detection Method:**
+- Queries `system_profiler SPPowerDataType` for AC charger information
+- Extracts actual wattage from connected power adapter
+- Compares against configurable threshold (default: 45W)
+
+**Possible Results:**
+- `Normal` - Adequate charging wattage detected
+- `Low Wattage Detected (XXW)` - Charging below threshold (shows actual wattage)
+- `Not Charging` - Device not connected to power
+- `Unable to Detect` - Cannot determine wattage information
+
+**Configuration:**
+Edit the `WATTAGE_THRESHOLD` variable in the script to adjust the minimum acceptable wattage (default: 45W). Common MacBook chargers: 30W (MacBook Air), 61-67W (MacBook Pro 13"), 96-140W (MacBook Pro 14"/16").
+
+**Use Case:**
+Users often experience performance degradation or battery drain while plugged in because they're using underpowered USB-C accessories. This extension attribute helps identify these situations proactively. Create a Smart Group for devices with low wattage detection to send notifications to users or IT teams, or include in helpdesk workflows when troubleshooting performance complaints.
+
 ## Installation
 
 ### Adding to Jamf Pro
@@ -144,5 +168,5 @@ See [LICENSE](LICENSE) file for details.
 
 ## Version
 
-Current version: 1.1.0
+Current version: 1.2.0
 See [CHANGELOG.md](CHANGELOG.md) for version history.
