@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2025-12-13
+
+### Added
+- VPN Client Auto-Connect Status extension attribute script
+  - Checks auto-connect configuration for 10 enterprise VPN clients
+  - Supported VPNs: Cisco AnyConnect, Palo Alto GlobalProtect, Fortinet FortiClient, Zscaler, Pulse Secure, Tunnelblick, Sophos Connect, SonicWall NetExtender, Check Point VPN, Cloudflare WARP
+  - Reads client-specific preference files and configurations
+  - Reports status for all installed VPN clients: Enabled, Disabled, Unknown, or Not Installed
+  - Returns multiple VPN statuses in single result (e.g., "Cisco AnyConnect: Enabled, GlobalProtect: Disabled")
+  - Common use cases:
+    - Ensure remote workers maintain security posture with auto-connect VPN
+    - Security policy enforcement and compliance auditing
+    - Identify devices with disabled auto-connect for remediation
+    - Generate reports for hybrid workforce security
+- Updated README.md with documentation for VPN Auto-Connect Status script
+  - Complete list of 10 supported VPN clients
+  - Detection methodology for each VPN client
+  - Use cases for remote workforce security
+  - Smart Group suggestions for compliance and remediation
+
+### Changed
+- Updated repository version to 1.5.0
+
 ## [1.4.0] - 2025-12-13
 
 ### Added
