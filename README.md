@@ -66,6 +66,81 @@ Identifies home directories in `/Users/` that no longer have corresponding user 
 **Use Case:**
 When computers are reassigned or users leave the organization, local accounts are often deleted but home folders remain behind, consuming significant disk space. This extension attribute helps identify these orphaned directories for cleanup. Create a Smart Group for devices with orphaned directories to scope a cleanup policy or generate reports for manual review.
 
+### 3. Slow Charging Detection (Wattage Mismatch)
+
+**File:** `extension-attributes/slow-charging-detection.sh`
+
+**Description:**
+Detects when a Mac is charging with an underpowered adapter that may cause performance issues or battery drain during use. Identifies users who are using USB-C hubs, phone chargers, or other low-wattage adapters instead of their MacBook's proper power adapter.
+
+**Detection Method:**
+- Queries `system_profiler SPPowerDataType` for AC charger information
+- Extracts actual wattage from connected power adapter
+- Compares against configurable threshold (default: 45W)
+
+**Possible Results:**
+- `Normal` - Adequate charging wattage detected
+- `Low Wattage Detected (XXW)` - Charging below threshold (shows actual wattage)
+- `Not Charging` - Device not connected to power
+- `Unable to Detect` - Cannot determine wattage information
+
+**Configuration:**
+Edit the `WATTAGE_THRESHOLD` variable in the script to adjust the minimum acceptable wattage (default: 45W). Common MacBook chargers: 30W (MacBook Air), 61-67W (MacBook Pro 13"), 96-140W (MacBook Pro 14"/16").
+
+**Use Case:**
+Users often experience performance degradation or battery drain while plugged in because they're using underpowered USB-C accessories. This extension attribute helps identify these situations proactively. Create a Smart Group for devices with low wattage detection to send notifications to users or IT teams, or include in helpdesk workflows when troubleshooting performance complaints.
+
+### 4. Current Monitor Refresh Rate
+
+**File:** `extension-attributes/monitor-refresh-rate.sh`
+
+**Description:**
+Reports the current refresh rate of the main display. Ensures ProMotion-capable MacBook Pros (120Hz) aren't accidentally locked to 60Hz and that external displays are running at optimal settings.
+
+**Detection Method:**
+- Queries `system_profiler SPDisplaysDataType` for display information
+- Extracts refresh rate from display metadata
+- Focuses on the main/primary display
+
+**Possible Results:**
+- `120 Hertz` - ProMotion or high refresh rate active
+- `60 Hertz` - Standard refresh rate
+- `XX Hertz` - Other refresh rate detected
+- `Unable to Detect` - Cannot determine refresh rate
+
+**Use Case:**
+Creative agencies and organizations that invest in ProMotion MacBook Pros (120Hz displays) need to ensure users aren't accidentally running at lower refresh rates, which defeats the purpose of the premium hardware. External display users can also benefit from verifying optimal display settings. Create a Smart Group for devices not running at expected refresh rates to identify configuration issues or send reminders to users about display settings.
+
+### 5. Default Web Browser
+
+**File:** `extension-attributes/default-web-browser.sh`
+
+**Description:**
+Identifies which web browser is set as the default system-wide handler for HTTP/HTTPS URLs. Essential for application compatibility planning, security policy enforcement, and software standardization tracking.
+
+**Detection Method:**
+- Primary: Uses Python with Foundation/AppKit frameworks to query LaunchServices
+- Fallback: Reads LaunchServices preferences using PlistBuddy
+- Parses bundle identifier and converts to human-readable browser name
+
+**Possible Results:**
+- `Safari` - Apple Safari browser
+- `Chrome` - Google Chrome
+- `Firefox` - Mozilla Firefox
+- `Edge` - Microsoft Edge
+- `Brave` - Brave Browser
+- `Arc` - Arc Browser
+- `Opera` - Opera browser
+- `Vivaldi` - Vivaldi browser
+- `Chromium` - Chromium browser
+- `Safari Technology Preview` - Apple's beta Safari
+- `Firefox Developer Edition` - Mozilla's developer browser
+- `Chrome Canary` - Google's beta Chrome
+- `Unknown` - Unrecognized browser or no default set
+
+**Use Case:**
+Organizations need to track browser adoption for application compatibility testing, security policy enforcement, and standardization initiatives. Some web applications only support specific browsers, making it critical to identify devices that may have compatibility issues. Create Smart Groups based on browser type to scope browser-specific policies, deploy extensions, or send communications about supported browsers. Also useful for measuring the success of browser migration projects.
+
 ## Installation
 
 ### Adding to Jamf Pro
@@ -144,5 +219,5 @@ See [LICENSE](LICENSE) file for details.
 
 ## Version
 
-Current version: 1.1.0
+Current version: 1.4.0
 See [CHANGELOG.md](CHANGELOG.md) for version history.
