@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-04-03
+
+### Added
+- FileVault SecureToken Status extension attribute script
+  - Iterates over all local users with UID ≥ 500 using `dscl . -list /Users`
+  - Queries each user's SecureToken state via `sysadminctl -secureTokenStatus`
+  - Returns a comma-separated per-user status (e.g., "alice: Enabled, bob: Disabled")
+  - Handles missing `sysadminctl` gracefully (macOS < 10.14)
+  - Common use cases:
+    - Identify users who cannot unlock FileVault at the pre-boot login window
+    - Ensure all IT admin accounts have SecureToken before enabling FileVault
+    - Audit SecureToken state after account migrations or MDM re-enrolment
+
+### Changed
+- Updated repository version to 2.1.0
+
 ## [2.0.0] - 2026-04-03
 
 ### Added

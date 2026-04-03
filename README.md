@@ -258,7 +258,27 @@ Reports whether a VPN tunnel is currently active by inspecting `utun` interfaces
 **Use Case:**
 Verify VPN connectivity at inventory collection time for remote workers. Create Smart Groups for devices not connected to VPN to enforce compliance policies, trigger notifications, or restrict access to sensitive configuration profiles.
 
-### 11. Chrome Extension Audit
+### 11. FileVault SecureToken Status
+
+**File:** `extension-attributes/filevault-securetoken-status.zsh`
+
+**Description:**
+Reports the SecureToken status for every local standard user account (UID ≥ 500). SecureToken is required for a user to decrypt and unlock FileVault at the pre-boot login window.
+
+**Detection Method:**
+- Lists all user accounts via `dscl . -list /Users` and filters by UID ≥ 500
+- Calls `sysadminctl -secureTokenStatus <username>` for each account
+- Parses stdout/stderr for `ENABLED` or `DISABLED` keywords
+
+**Possible Results:**
+- `alice: Enabled, bob: Disabled` - Per-user SecureToken state, comma-separated
+- `No local users found` - No standard accounts found on the device
+- `sysadminctl unavailable` - Tool not present (requires macOS 10.14+)
+
+**Use Case:**
+Before enforcing FileVault via MDM, ensure the right accounts have SecureToken so they can unlock the volume. Create Smart Groups for devices where any user shows `Disabled` to trigger remediation workflows or SecureToken bootstrapping policies.
+
+### 12. Chrome Extension Audit
 
 **File:** `extension-attributes/chrome-extension-audit.zsh`
 
@@ -358,5 +378,5 @@ See [LICENSE](LICENSE) file for details.
 
 ## Version
 
-Current version: 2.0.0
+Current version: 2.1.0
 See [CHANGELOG.md](CHANGELOG.md) for version history.
