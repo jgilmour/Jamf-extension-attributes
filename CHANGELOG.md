@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] - 2026-04-03
+
+### Added
+- Bootstrap Token Escrow Status extension attribute script
+  - Detects architecture and macOS version to determine Bootstrap Token support
+  - Runs `profiles status -type bootstraptoken` and parses escrow state
+  - Returns "Not Supported" on Intel Macs running macOS < 10.15
+  - Handles missing `profiles` binary gracefully
+  - Common use cases:
+    - Verify Bootstrap Token escrow before enforcing FileVault MDM management
+    - Identify devices where MDM cannot silently unlock FileVault at the pre-boot window
+    - Audit Bootstrap Token escrow compliance across mixed Intel/Apple Silicon fleets
+
+### Changed
+- Updated repository version to 2.6.0
+
 ## [2.5.0] - 2026-04-03
 
 ### Added

@@ -382,6 +382,27 @@ Checks whether a device is eligible for Apple Intelligence and whether it has be
 **Use Case:**
 Identify which devices can run Apple Intelligence, track user adoption, and verify that MDM restriction policies are applied where required. Create Smart Groups for eligible-but-not-enabled devices to send enablement guides to users.
 
+### 15. Bootstrap Token Escrow Status
+
+**File:** `extension-attributes/bootstrap-token-escrow-status.zsh`
+
+**Description:**
+Reports whether a Bootstrap Token has been escrowed to the MDM server. Bootstrap Token allows MDM to silently unlock FileVault at the pre-boot login window and is a prerequisite for certain MDM-driven operations.
+
+**Detection Method:**
+- Checks architecture and macOS version (Intel Macs require macOS 10.15+)
+- Runs `profiles status -type bootstraptoken` and parses the output
+- Handles the case where the `profiles` binary is unavailable
+
+**Possible Results:**
+- `Escrowed` - Bootstrap Token has been successfully escrowed to the MDM server
+- `Not Escrowed` - Device supports Bootstrap Token but it has not been escrowed
+- `Not Supported` - Intel Mac on macOS < 10.15, or hardware does not support Bootstrap Token
+- `Unknown` - `profiles` command unavailable or output unrecognised
+
+**Use Case:**
+Before enforcing FileVault via MDM, Bootstrap Token escrow must be in place so MDM can unlock the volume at the pre-boot window. Create a Smart Group for devices where this attribute is `Not Escrowed` to trigger re-escrow workflows or flag for manual remediation.
+
 ### 14. Secure Boot Policy
 
 **File:** `extension-attributes/secure-boot-policy.zsh`
@@ -483,5 +504,5 @@ See [LICENSE](LICENSE) file for details.
 
 ## Version
 
-Current version: 2.5.0
+Current version: 2.6.0
 See [CHANGELOG.md](CHANGELOG.md) for version history.
