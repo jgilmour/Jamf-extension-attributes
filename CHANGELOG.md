@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.0] - 2026-04-03
+
+### Added
+- XProtect Version and Currency extension attribute script
+  - Reads local XProtect version from XProtect.meta.plist via PlistBuddy
+  - Fetches latest version from the SOFA feed (sofafeed.macadmins.io) with a 5-second timeout
+  - Compares local vs latest version and reports "Current" or "Outdated (Latest: XXXX)"
+  - Falls back gracefully when no internet connection is available
+  - Common use cases:
+    - Ensure XProtect definitions are up to date across the fleet
+    - Identify devices with stale XProtect versions that may miss new malware signatures
+    - Correlate outdated XProtect with network or MDM delivery issues
+
+### Changed
+- Updated repository version to 2.7.0
+
 ## [2.6.0] - 2026-04-03
 
 ### Added

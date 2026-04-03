@@ -382,6 +382,27 @@ Checks whether a device is eligible for Apple Intelligence and whether it has be
 **Use Case:**
 Identify which devices can run Apple Intelligence, track user adoption, and verify that MDM restriction policies are applied where required. Create Smart Groups for eligible-but-not-enabled devices to send enablement guides to users.
 
+### 16. XProtect Version and Currency
+
+**File:** `extension-attributes/xprotect-version-currency.zsh`
+
+**Description:**
+Reports the locally installed XProtect version and checks whether it is current by comparing against the latest version published in the SOFA feed.
+
+**Detection Method:**
+- Reads `XProtectVersion` from `XProtect.meta.plist` via PlistBuddy
+- Fetches the latest version from `https://sofafeed.macadmins.io/v1/xprotect_data.json` with a 5-second timeout
+- Compares local vs latest and reports status; falls back gracefully when offline
+
+**Possible Results:**
+- `Version: 5267 | Status: Current` - XProtect is up to date
+- `Version: 5267 | Status: Outdated (Latest: 5280)` - Newer version available
+- `Version: 5267 | Status: Unknown (No Internet)` - Could not reach the SOFA feed
+- `XProtect Not Found` - XProtect bundle not present
+
+**Use Case:**
+Identify devices with stale XProtect definitions that may be missing coverage for recent malware. Create Smart Groups for outdated devices to trigger a software update policy or investigate delivery issues.
+
 ### 15. Bootstrap Token Escrow Status
 
 **File:** `extension-attributes/bootstrap-token-escrow-status.zsh`
@@ -504,5 +525,5 @@ See [LICENSE](LICENSE) file for details.
 
 ## Version
 
-Current version: 2.6.0
+Current version: 2.7.0
 See [CHANGELOG.md](CHANGELOG.md) for version history.
