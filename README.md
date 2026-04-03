@@ -382,6 +382,29 @@ Checks whether a device is eligible for Apple Intelligence and whether it has be
 **Use Case:**
 Identify which devices can run Apple Intelligence, track user adoption, and verify that MDM restriction policies are applied where required. Create Smart Groups for eligible-but-not-enabled devices to send enablement guides to users.
 
+### 14. Secure Boot Policy
+
+**File:** `extension-attributes/secure-boot-policy.zsh`
+
+**Description:**
+Reports the current Secure Boot security policy level. Differentiates between Apple Silicon and Intel (with or without T2 security chip) to provide the correct policy level for each platform.
+
+**Detection Method:**
+- Checks architecture with `uname -m`
+- **Apple Silicon:** queries `bputil -d` for Full / Reduced / Permissive Security levels
+- **Intel T2:** verifies T2 presence via `system_profiler SPiBridgeDataType`, then queries `bputil -d`
+- **Intel without T2:** reports N/A — no Secure Boot capability
+
+**Possible Results:**
+- `Full Security` - Default; only Apple-signed, current macOS versions allowed to boot
+- `Reduced Security` - Older macOS or approved third-party kernel extensions permitted
+- `Permissive Security` - Minimal restrictions; all kernel extensions allowed
+- `Full Security (Intel T2)` / `Medium Security (Intel T2)` / `No Security (Intel T2)`
+- `N/A (Intel Mac, No T2)` - Intel Mac without T2 security chip
+
+**Use Case:**
+Audit and enforce Secure Boot policy across the fleet. Create Smart Groups for devices with Reduced or Permissive Security to trigger remediation, validate that MDM security baseline policies have been applied, and ensure kext-dependent software doesn't inadvertently lower security posture across the environment.
+
 ## Installation
 
 ### Adding to Jamf Pro
@@ -460,5 +483,5 @@ See [LICENSE](LICENSE) file for details.
 
 ## Version
 
-Current version: 2.3.0
+Current version: 2.5.0
 See [CHANGELOG.md](CHANGELOG.md) for version history.

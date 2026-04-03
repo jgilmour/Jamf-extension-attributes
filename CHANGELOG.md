@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2026-04-03
+
+### Added
+- Secure Boot Policy extension attribute script
+  - Detects architecture via `uname -m` to select the correct detection path
+  - Apple Silicon: runs `bputil -d` and maps output to Full / Reduced / Permissive Security
+  - Intel T2: checks `system_profiler SPiBridgeDataType` for T2 presence, then queries `bputil -d`
+  - Intel without T2: returns "N/A (Intel Mac, No T2)"
+  - Common use cases:
+    - Enforce Full Security policy across the fleet before deploying sensitive workloads
+    - Identify Macs with Permissive or Reduced security that have kernel extensions enabled
+    - Audit Secure Boot state after MDM security policy deployment
+
+### Changed
+- Updated repository version to 2.5.0
+
 ## [2.4.0] - 2026-04-03
 
 ### Added
