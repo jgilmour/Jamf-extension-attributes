@@ -141,6 +141,24 @@ Identifies which web browser is set as the default system-wide handler for HTTP/
 **Use Case:**
 Organizations need to track browser adoption for application compatibility testing, security policy enforcement, and standardization initiatives. Some web applications only support specific browsers, making it critical to identify devices that may have compatibility issues. Create Smart Groups based on browser type to scope browser-specific policies, deploy extensions, or send communications about supported browsers. Also useful for measuring the success of browser migration projects.
 
+### 7. Days Since Last Reboot
+
+**File:** `extension-attributes/Days-Since-Last-Reboot.sh`
+
+**Description:**
+Reports the number of complete days since the Mac last rebooted, using the kernel boot time from `sysctl kern.boottime`.
+
+**Detection Method:**
+- Reads `kern.boottime` epoch value via `sysctl`
+- Subtracts boot epoch from current epoch and divides by 86400
+
+**Possible Results:**
+- `3` - Integer days since last reboot
+- `0` - Rebooted today or calculation failed
+
+**Use Case:**
+Enforce reboot compliance policies by identifying devices that haven't restarted within a defined window (e.g., 14 or 30 days). Create Smart Groups on this value to trigger self-healing policies or user notifications.
+
 ### 6. VPN Client Auto-Connect Status
 
 **File:** `extension-attributes/vpn-auto-connect-status.sh`
@@ -175,6 +193,25 @@ Checks if enterprise VPN clients are configured to auto-connect on startup. Ensu
 
 **Use Case:**
 Remote and hybrid workforces require consistent VPN connectivity to access corporate resources securely. This extension attribute helps IT teams verify that VPN clients are properly configured for automatic connection, reducing security risks from users forgetting to connect manually. Create Smart Groups for devices with disabled auto-connect to send reminders, deploy configuration profiles, or generate compliance reports. Essential for security policy enforcement and audit requirements.
+
+### 7. Days Since Last Reboot
+
+**File:** `extension-attributes/days-since-last-reboot.zsh`
+
+**Description:**
+Returns the number of whole days since the last system boot as a plain integer, enabling numeric comparisons in Jamf smart groups.
+
+**Detection Method:**
+- Reads `sysctl -n kern.boottime` to get boot epoch seconds
+- Computes elapsed seconds against current epoch (`date +%s`)
+- Divides by 86400 to yield whole days
+
+**Possible Results:**
+- `14` - Integer number of days since last reboot (example)
+- `Unknown` - Boot time could not be determined or returned unexpected format
+
+**Use Case:**
+Identify devices that haven't rebooted within policy (e.g., more than 14 or 30 days). Create Smart Groups using numeric comparisons to scope reboot-nudge policies, enforce patch management workflows, or flag devices with excessive uptime before they cause problems.
 
 ## Installation
 
@@ -254,5 +291,5 @@ See [LICENSE](LICENSE) file for details.
 
 ## Version
 
-Current version: 1.5.0
+Current version: 1.6.0
 See [CHANGELOG.md](CHANGELOG.md) for version history.

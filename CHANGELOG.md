@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-04-03
+
+### Added
+- Days Since Last Reboot extension attribute script
+  - Uses `sysctl kern.boottime` to retrieve kernel boot time as epoch seconds
+  - Calculates complete days elapsed since last reboot via integer arithmetic
+  - Returns a plain integer (e.g., "3") representing days since last reboot
+  - Returns "0" if the device rebooted today or if boot time cannot be determined
+  - Common use cases:
+    - Identify devices that haven't been rebooted within policy (e.g., 14 or 30 days)
+    - Enforce reboot compliance for patch management and memory health
+    - Trigger remediation policies for devices with excessive uptime
+- Updated README.md with documentation for Days Since Last Reboot script
+
+### Changed
+- Updated repository version to 1.6.0
+
 ## [1.5.0] - 2025-12-13
 
 ### Added
