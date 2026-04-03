@@ -218,6 +218,26 @@ Edit the `EXPECTED_ADMINS` array in the script to match the admin account names 
 **Use Case:**
 Enforce least-privilege policies and detect unauthorized admin escalations. Create a Smart Group for devices where this attribute is not `Clean` to trigger remediation policies or alert your security team.
 
+### 9. Wi-Fi SSID and Security Protocol
+
+**File:** `extension-attributes/wifi-ssid-security.zsh`
+
+**Description:**
+Returns the connected Wi-Fi SSID and security protocol in a single string. Detects open or weak networks and confirms WPA3 adoption across the fleet.
+
+**Detection Method:**
+- Uses `networksetup -getairportnetwork` per interface for SSID (reliable on macOS 15+)
+- Parses `system_profiler SPAirPortDataType` for the security mode of the current network
+- Handles multiple Wi-Fi interfaces (en0, en1)
+
+**Possible Results:**
+- `SSID: Corp-WiFi | Security: WPA3 Personal` - Connected with security info
+- `Not Connected` - Wi-Fi on but not associated to a network
+- `Wi-Fi Off` - Wi-Fi hardware is disabled
+
+**Use Case:**
+Detect devices connecting to open or WPA2 networks when WPA3 is required. Create Smart Groups to identify remote workers on weak home networks, enforce connection policies, or audit compliance with wireless security standards.
+
 ## Installation
 
 ### Adding to Jamf Pro

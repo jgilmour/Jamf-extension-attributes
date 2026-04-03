@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2026-04-03
+
+### Added
+- Wi-Fi SSID and Security Protocol extension attribute script
+  - Returns connected SSID and security protocol (e.g. "SSID: Corp-WiFi | Security: WPA3 Personal")
+  - Uses `networksetup -getairportnetwork` for SSID (reliable on macOS 15+)
+  - Parses `system_profiler SPAirPortDataType` for security mode
+  - Handles multiple Wi-Fi interfaces (en0, en1), Wi-Fi off, and not connected states
+  - Common use cases:
+    - Detect devices connecting to open or weak-security networks
+    - Enforce WPA3 compliance policies across the fleet
+    - Identify remote workers on potentially insecure home networks
+- Updated README.md with documentation for Wi-Fi SSID and Security Protocol script
+
+### Changed
+- Updated repository version to 1.8.0
+
 ## [1.7.0] - 2026-04-03
 
 ### Added
