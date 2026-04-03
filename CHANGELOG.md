@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-04-03
+
+### Added
+- Login Items and Background Agents extension attribute script
+  - On macOS 13+ (Ventura): uses `sfltool dumpbtm` to enumerate Background Task Management registrations
+  - On macOS 12 and earlier: reads `/Library/LaunchAgents` and per-user `~/Library/LaunchAgents` plists
+  - Deduplicates and sorts all discovered item names
+  - Common use cases:
+    - Audit persistent software installed by third-party apps
+    - Detect unexpected background agents that could indicate compromise
+    - Inventory login item sprawl before a cleanup initiative
+
+### Changed
+- Updated repository version to 2.2.0
+
 ## [2.1.0] - 2026-04-03
 
 ### Added

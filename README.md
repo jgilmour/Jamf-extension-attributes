@@ -278,7 +278,27 @@ Reports the SecureToken status for every local standard user account (UID ≥ 50
 **Use Case:**
 Before enforcing FileVault via MDM, ensure the right accounts have SecureToken so they can unlock the volume. Create Smart Groups for devices where any user shows `Disabled` to trigger remediation workflows or SecureToken bootstrapping policies.
 
-### 12. Chrome Extension Audit
+### 12. Login Items and Background Agents
+
+**File:** `extension-attributes/login-items-background-agents.zsh`
+
+**Description:**
+Enumerates all login items and background agents registered on the device. Uses the modern Background Task Management API on macOS 13+ and falls back to LaunchAgent scanning on macOS 12 and earlier.
+
+**Detection Method:**
+- **macOS 13+ (Ventura):** Runs `sfltool dumpbtm` and parses `name` fields from Background Task Management output
+- **macOS 12 and earlier:** Reads `Label` from all `.plist` files in `/Library/LaunchAgents/` and each user's `~/Library/LaunchAgents/`
+- Results are deduplicated and sorted alphabetically
+
+**Possible Results:**
+- `1Password, Dropbox, com.company.agent` - Sorted, comma-separated list of item names/labels
+- `None` - No login items or background agents found
+- `Unable to Detect` - `sfltool dumpbtm` returned no output
+
+**Use Case:**
+Audit persistent background software across the fleet. Identify unexpected background agents that could indicate adware, malware persistence, or unwanted software. Create Smart Groups to flag devices with specific items for investigation or automated removal policies.
+
+### 13. Chrome Extension Audit
 
 **File:** `extension-attributes/chrome-extension-audit.zsh`
 
@@ -378,5 +398,5 @@ See [LICENSE](LICENSE) file for details.
 
 ## Version
 
-Current version: 2.1.0
+Current version: 2.2.0
 See [CHANGELOG.md](CHANGELOG.md) for version history.
