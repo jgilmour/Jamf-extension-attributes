@@ -320,6 +320,45 @@ Audits Google Chrome browser extensions installed across all user profiles on th
 **Use Case:**
 Identify unapproved or malicious browser extensions across the fleet before a security incident occurs. Create Smart Groups scoped to devices with known-bad extensions or audit extension sprawl ahead of a browser management rollout. Also useful for verifying that required security extensions (e.g., endpoint protection, password managers) are installed.
 
+### 11. Login Items / Background Launch Agents
+
+**File:** `extension-attributes/login-items-background-agents.zsh`
+
+**Description:**
+Lists non-Apple background login items and launch agents. On macOS 13+ uses the Background Task Manager via `sfltool dumpbtm`; on macOS 12 and earlier falls back to scanning LaunchAgents directories.
+
+**Detection Method:**
+- macOS 13+: parses `sfltool dumpbtm` output, filters out `com.apple.*` bundle IDs
+- macOS 12 and earlier: scans `/Library/LaunchAgents`, `/Library/LaunchDaemons`, and per-user LaunchAgents
+
+**Possible Results:**
+- `com.vendor.app` (newline-delimited) - Non-Apple background items found
+- `None Found` - No non-Apple background items detected
+- `macOS 12 or earlier - Legacy scan: None Found` - Legacy path, nothing found
+- `macOS 12 or earlier - Legacy scan:` followed by item list
+
+**Use Case:**
+Identify unauthorised persistence mechanisms, third-party software installing background agents without consent, or track down unwanted startup items across the fleet.
+
+### 12. Jamf Connect Migration Status
+
+**File:** `extension-attributes/jamf-connect-migration-status.zsh`
+
+**Description:**
+Checks whether Jamf Connect is installed and whether the login window authentication chain has been configured to use it. Useful for tracking rollout progress.
+
+**Detection Method:**
+- Checks for `/Applications/Jamf Connect.app`
+- Runs `authchanger -print` (searches `/usr/local/bin` and `/usr/bin`) and looks for `JamfConnect` in the output
+
+**Possible Results:**
+- `Migrated` - Jamf Connect is installed and present in the auth chain
+- `Not Migrated` - Installed but not in the auth chain (authchanger not configured)
+- `Jamf Connect Not Installed` - App not found on device
+
+**Use Case:**
+Track the progress of a Jamf Connect deployment. Identify devices where the app was installed but the auth migration did not complete, or validate full migration before retiring legacy auth methods.
+
 ## Installation
 
 ### Adding to Jamf Pro

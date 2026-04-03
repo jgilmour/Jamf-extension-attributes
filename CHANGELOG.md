@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-04-03
+
+### Added
+- Jamf Connect Migration Status extension attribute script
+  - Returns "Migrated" if Jamf Connect is installed and present in the auth chain
+  - Returns "Not Migrated" if installed but not configured in the login window
+  - Returns "Jamf Connect Not Installed" if the app is absent
+  - Uses `authchanger -print` (checks `/usr/local/bin` and `/usr/bin`) to inspect the auth chain
+  - Common use cases:
+    - Track progress of Jamf Connect rollout across the fleet
+    - Identify devices where installation succeeded but auth migration did not
+    - Validate post-migration state before decommissioning legacy auth
+- Updated README.md with documentation for Jamf Connect Migration Status script
+
+### Changed
+- Updated repository version to 2.3.0
+
 ## [2.2.0] - 2026-04-03
 
 ### Added
