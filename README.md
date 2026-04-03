@@ -437,5 +437,5 @@ See [LICENSE](LICENSE) file for details.
 
 ## Version
 
-Current version: 2.2.0
+Current version: 2.3.0
 See [CHANGELOG.md](CHANGELOG.md) for version history.

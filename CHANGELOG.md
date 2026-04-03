@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2026-04-03
+
+### Added
+- Apple Intelligence Eligibility and Status extension attribute script
+  - Checks architecture (must be Apple Silicon arm64)
+  - Validates macOS version (must be 15.1 or later)
+  - Checks MDM restriction keys (`allowAppleIntelligence`, `allowWritingTools`)
+  - Checks user-level opt-in via CloudSubscriptionFeatures preference
+  - Returns eligibility and enabled state in a single result string
+  - Common use cases:
+    - Identify devices eligible for Apple Intelligence features
+    - Track MDM restriction compliance
+    - Measure user adoption of Apple Intelligence across the fleet
+- Updated README.md with documentation for Apple Intelligence Eligibility and Status script
+
+### Changed
+- Updated repository version to 2.4.0
+
 ## [2.3.0] - 2026-04-03
 
 ### Added
