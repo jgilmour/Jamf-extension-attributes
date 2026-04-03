@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-04-03
+
+### Added
+- Chrome Extension Audit extension attribute script
+  - Loops through all user Chrome profiles (Default + Profile *) for every local user
+  - Parses `manifest.json` to extract human-readable extension names
+  - Deduplicates across users and profiles; skips localisation token names (`__MSG_*`)
+  - Returns a sorted, comma-separated list or "No Extensions Found" / "Chrome Not Installed"
+  - Common use cases:
+    - Detect unapproved or malicious browser extensions across the fleet
+    - Enforce extension allowlists for regulated environments
+    - Audit extension sprawl before a browser management rollout
+
+### Changed
+- Updated repository version to 1.9.0
+
 ## [1.8.0] - 2026-04-03
 
 ### Added

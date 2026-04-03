@@ -238,6 +238,28 @@ Returns the connected Wi-Fi SSID and security protocol in a single string. Detec
 **Use Case:**
 Detect devices connecting to open or WPA2 networks when WPA3 is required. Create Smart Groups to identify remote workers on weak home networks, enforce connection policies, or audit compliance with wireless security standards.
 
+### 10. Chrome Extension Audit
+
+**File:** `extension-attributes/chrome-extension-audit.zsh`
+
+**Description:**
+Audits Google Chrome browser extensions installed across all user profiles on the device. Returns a sorted, deduplicated list of extension names to detect unapproved or malicious extensions.
+
+**Detection Method:**
+- Iterates through all local user home directories
+- Scans all Chrome profiles (`Default` and `Profile *`) per user
+- Parses `manifest.json` in each extension's versioned directory
+- Deduplicates extension names across all users and profiles
+- Skips localisation token names (`__MSG_*`) that lack human-readable labels
+
+**Possible Results:**
+- `Chrome Not Installed` - Google Chrome app not found in `/Applications`
+- `No Extensions Found` - Chrome is installed but no extensions detected
+- `1Password – Password Manager, uBlock Origin, ...` - Sorted comma-separated list of extension names
+
+**Use Case:**
+Identify unapproved or malicious browser extensions across the fleet before a security incident occurs. Create Smart Groups scoped to devices with known-bad extensions or audit extension sprawl ahead of a browser management rollout. Also useful for verifying that required security extensions (e.g., endpoint protection, password managers) are installed.
+
 ## Installation
 
 ### Adding to Jamf Pro
@@ -316,5 +338,5 @@ See [LICENSE](LICENSE) file for details.
 
 ## Version
 
-Current version: 1.6.0
+Current version: 1.9.0
 See [CHANGELOG.md](CHANGELOG.md) for version history.
