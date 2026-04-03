@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.0] - 2026-04-03
+
+### Added
+- Homebrew Package Audit extension attribute script
+  - Detects Homebrew at both Apple Silicon (/opt/homebrew) and Intel (/usr/local) paths
+  - Runs `brew list --formula` as the console user via `launchctl asuser` to avoid root restriction
+  - Returns a newline-separated list of installed formulae
+  - Handles no console user, Homebrew not installed, and no packages installed cases
+  - Common use cases:
+    - Audit unauthorised or unexpected CLI tools installed via Homebrew
+    - Identify devices with development toolchains in production environments
+    - Track Homebrew package sprawl for security and compliance reviews
+
+### Changed
+- Updated repository version to 2.8.0
+
 ## [2.7.0] - 2026-04-03
 
 ### Added

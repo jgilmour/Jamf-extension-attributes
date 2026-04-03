@@ -382,6 +382,27 @@ Checks whether a device is eligible for Apple Intelligence and whether it has be
 **Use Case:**
 Identify which devices can run Apple Intelligence, track user adoption, and verify that MDM restriction policies are applied where required. Create Smart Groups for eligible-but-not-enabled devices to send enablement guides to users.
 
+### 17. Homebrew Package Audit
+
+**File:** `extension-attributes/homebrew-package-audit.zsh`
+
+**Description:**
+Returns a newline-separated list of Homebrew formulae installed by the console user. Casks are excluded. Runs `brew list --formula` as the console user since Homebrew refuses to execute as root.
+
+**Detection Method:**
+- Locates brew at `/opt/homebrew/bin/brew` (Apple Silicon) or `/usr/local/bin/brew` (Intel)
+- Runs brew as the console user via `launchctl asuser <uid> sudo -u <user> brew list --formula`
+- Gets console user via `stat -f "%Su" /dev/console`
+
+**Possible Results:**
+- Newline-separated list of formula names (e.g. `git`, `wget`, `node`)
+- `Homebrew Not Installed` - brew binary not found at either path
+- `No Packages Installed` - Homebrew is present but no formulae are installed
+- `No Console User` - No user is logged in at the console
+
+**Use Case:**
+Audit unauthorised CLI tools and development toolchains installed via Homebrew. Identify devices in production environments with unexpected packages, or track Homebrew sprawl as part of a security or software compliance review.
+
 ### 16. XProtect Version and Currency
 
 **File:** `extension-attributes/xprotect-version-currency.zsh`
@@ -525,5 +546,5 @@ See [LICENSE](LICENSE) file for details.
 
 ## Version
 
-Current version: 2.7.0
+Current version: 2.8.0
 See [CHANGELOG.md](CHANGELOG.md) for version history.
