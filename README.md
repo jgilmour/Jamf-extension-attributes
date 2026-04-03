@@ -359,6 +359,29 @@ Checks whether Jamf Connect is installed and whether the login window authentica
 **Use Case:**
 Track the progress of a Jamf Connect deployment. Identify devices where the app was installed but the auth migration did not complete, or validate full migration before retiring legacy auth methods.
 
+### 13. Apple Intelligence Eligibility and Status
+
+**File:** `extension-attributes/apple-intelligence-eligibility.zsh`
+
+**Description:**
+Checks whether a device is eligible for Apple Intelligence and whether it has been enabled by the current user.
+
+**Detection Method:**
+- Architecture check: must be `arm64` (Apple Silicon)
+- macOS version check: must be 15.1 or later
+- MDM restriction check: reads `com.apple.applicationaccess` for `allowAppleIntelligence` / `allowWritingTools`
+- User opt-in check: reads `com.apple.CloudSubscriptionFeatures` preference for the console user
+
+**Possible Results:**
+- `Eligible: Yes | Enabled: Yes` - Eligible and user has enabled it
+- `Eligible: Yes | Enabled: No` - Eligible but not yet enabled
+- `Eligible: No | Reason: Intel Mac` - Intel processor, not supported
+- `Eligible: No | Reason: macOS below 15.1` - OS too old
+- `Eligible: No | Reason: MDM Restricted` - MDM policy is blocking Apple Intelligence
+
+**Use Case:**
+Identify which devices can run Apple Intelligence, track user adoption, and verify that MDM restriction policies are applied where required. Create Smart Groups for eligible-but-not-enabled devices to send enablement guides to users.
+
 ## Installation
 
 ### Adding to Jamf Pro
