@@ -238,7 +238,27 @@ Returns the connected Wi-Fi SSID and security protocol in a single string. Detec
 **Use Case:**
 Detect devices connecting to open or WPA2 networks when WPA3 is required. Create Smart Groups to identify remote workers on weak home networks, enforce connection policies, or audit compliance with wireless security standards.
 
-### 10. Chrome Extension Audit
+### 10. VPN Connected Status
+
+**File:** `extension-attributes/vpn-connected-status.zsh`
+
+**Description:**
+Reports whether a VPN tunnel is currently active by inspecting `utun` interfaces for routable IPv4 addresses. Includes a secondary check for the Palo Alto GlobalProtect daemon.
+
+**Detection Method:**
+- Parses `ifconfig` output for all `utun` interfaces with non-link-local IPv4 addresses
+- Prefers higher-numbered `utun` interfaces (e.g., `utun2`) over `utun0` which macOS uses for system features
+- Checks for `PanGPS` process as a GlobalProtect connectivity indicator
+
+**Possible Results:**
+- `Connected (10.0.0.42 via utun3)` - VPN active with tunnel IP and interface
+- `Connected (GlobalProtect active, IP pending)` - GP daemon running but IP not yet assigned
+- `Not Connected` - No active VPN tunnel detected
+
+**Use Case:**
+Verify VPN connectivity at inventory collection time for remote workers. Create Smart Groups for devices not connected to VPN to enforce compliance policies, trigger notifications, or restrict access to sensitive configuration profiles.
+
+### 11. Chrome Extension Audit
 
 **File:** `extension-attributes/chrome-extension-audit.zsh`
 
@@ -338,5 +358,5 @@ See [LICENSE](LICENSE) file for details.
 
 ## Version
 
-Current version: 1.9.0
+Current version: 2.0.0
 See [CHANGELOG.md](CHANGELOG.md) for version history.

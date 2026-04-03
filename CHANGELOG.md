@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-04-03
+
+### Added
+- VPN Connected Status extension attribute script
+  - Inspects all active `utun` interfaces via `ifconfig` for routable IPv4 addresses
+  - Reports the tunnel interface name and assigned IP when connected
+  - Secondary check: detects Palo Alto GlobalProtect daemon (`PanGPS`) as a VPN indicator
+  - Skips link-local (169.254.x.x) addresses and macOS system utun0 when higher tunnels exist
+  - Common use cases:
+    - Confirm VPN is active before allowing access to restricted policies
+    - Audit remote worker VPN connectivity at inventory time
+    - Identify devices that are offline from corporate VPN for compliance reporting
+
+### Changed
+- Updated repository version to 2.0.0
+
 ## [1.9.0] - 2026-04-03
 
 ### Added
