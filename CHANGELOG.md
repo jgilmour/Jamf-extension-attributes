@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-04-03
+
+### Added
+- Local Admin Account Audit extension attribute script
+  - Returns comma-separated list of unexpected local admin accounts, or "Clean"
+  - Reads admin group membership via `dscl . -read /Groups/admin GroupMembership`
+  - Compares members against a configurable `EXPECTED_ADMINS` allowlist
+  - Skips system accounts (UID < 500) and accounts that no longer exist in dscl
+  - Common use cases:
+    - Detect rogue or accidental admin escalations
+    - Enforce least-privilege policies across the fleet
+    - Audit admin accounts after offboarding or role changes
+- Updated README.md with documentation for Local Admin Account Audit script
+
+### Changed
+- Updated repository version to 1.7.0
+
 ## [1.6.0] - 2026-04-03
 
 ### Added

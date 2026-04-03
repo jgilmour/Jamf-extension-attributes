@@ -141,24 +141,6 @@ Identifies which web browser is set as the default system-wide handler for HTTP/
 **Use Case:**
 Organizations need to track browser adoption for application compatibility testing, security policy enforcement, and standardization initiatives. Some web applications only support specific browsers, making it critical to identify devices that may have compatibility issues. Create Smart Groups based on browser type to scope browser-specific policies, deploy extensions, or send communications about supported browsers. Also useful for measuring the success of browser migration projects.
 
-### 7. Days Since Last Reboot
-
-**File:** `extension-attributes/Days-Since-Last-Reboot.sh`
-
-**Description:**
-Reports the number of complete days since the Mac last rebooted, using the kernel boot time from `sysctl kern.boottime`.
-
-**Detection Method:**
-- Reads `kern.boottime` epoch value via `sysctl`
-- Subtracts boot epoch from current epoch and divides by 86400
-
-**Possible Results:**
-- `3` - Integer days since last reboot
-- `0` - Rebooted today or calculation failed
-
-**Use Case:**
-Enforce reboot compliance policies by identifying devices that haven't restarted within a defined window (e.g., 14 or 30 days). Create Smart Groups on this value to trigger self-healing policies or user notifications.
-
 ### 6. VPN Client Auto-Connect Status
 
 **File:** `extension-attributes/vpn-auto-connect-status.sh`
@@ -212,6 +194,29 @@ Returns the number of whole days since the last system boot as a plain integer, 
 
 **Use Case:**
 Identify devices that haven't rebooted within policy (e.g., more than 14 or 30 days). Create Smart Groups using numeric comparisons to scope reboot-nudge policies, enforce patch management workflows, or flag devices with excessive uptime before they cause problems.
+
+### 8. Local Admin Account Audit
+
+**File:** `extension-attributes/local-admin-account-audit.zsh`
+
+**Description:**
+Audits local admin group membership and returns any accounts that are not on the expected allowlist. Helps detect rogue or accidental admin escalations across your fleet.
+
+**Detection Method:**
+- Reads admin group members via `dscl . -read /Groups/admin GroupMembership`
+- Filters out system accounts (UID < 500) and accounts that no longer exist in dscl
+- Compares remaining members against a configurable `EXPECTED_ADMINS` array
+
+**Possible Results:**
+- `Clean` - Only expected accounts have admin privileges
+- `rogue_user, tempaccount` - Comma-separated list of unexpected admin accounts
+- `No Admin Group Found` - Admin group could not be read
+
+**Configuration:**
+Edit the `EXPECTED_ADMINS` array in the script to match the admin account names in your environment.
+
+**Use Case:**
+Enforce least-privilege policies and detect unauthorized admin escalations. Create a Smart Group for devices where this attribute is not `Clean` to trigger remediation policies or alert your security team.
 
 ## Installation
 
