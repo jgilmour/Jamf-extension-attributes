@@ -405,6 +405,25 @@ Reports the current Secure Boot security policy level. Differentiates between Ap
 **Use Case:**
 Audit and enforce Secure Boot policy across the fleet. Create Smart Groups for devices with Reduced or Permissive Security to trigger remediation, validate that MDM security baseline policies have been applied, and ensure kext-dependent software doesn't inadvertently lower security posture across the environment.
 
+### 19. Local User Password Age
+
+**File:** `extension-attributes/local-user-password-age.zsh`
+
+**Description:**
+Reports how many days have elapsed since each local standard user (UID ≥ 500) last changed their password. Uses Directory Services to read `passwordLastSetTime` for each account.
+
+**Detection Method:**
+- Lists all local users via `dscl . -list /Users`
+- Filters to UID ≥ 500 (standard/admin users)
+- Reads `passwordLastSetTime` and converts from Apple Core Data epoch to days elapsed
+
+**Possible Results:**
+- `user1: N days | user2: N days` - Days since last password change per user
+- `No Local Users Found` - No standard local accounts present
+
+**Use Case:**
+Identify devices with users who have not rotated their password within your policy window (e.g., 90 days). Create a Smart Group using a "greater than" criteria on the result and scope a Jamf Notify or Self Service reminder policy to prompt users to change their password.
+
 ### 18. Pending macOS Software Updates
 
 **File:** `extension-attributes/pending-macos-software-updates.zsh`

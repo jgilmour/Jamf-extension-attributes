@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.0] - 2026-04-03
+
+### Added
+- Local User Password Age extension attribute script
+  - Iterates all local users with UID ≥ 500 via `dscl . -list /Users`
+  - Reads `passwordLastSetTime` from Directory Services for each user
+  - Converts from Apple Core Data epoch (2001-01-01) to Unix epoch and calculates age in days
+  - Returns a pipe-delimited per-user summary (e.g., "alice: 45 days | bob: 120 days")
+  - Returns "No Local Users Found" when no standard accounts are present
+  - Common use cases:
+    - Identify users who have not changed their password within your policy window
+    - Enforce password rotation policies by scoping reminders to affected devices
+    - Audit password age across the fleet ahead of a compliance review
+
+### Changed
+- Updated repository version to 2.10.0
+
 ## [2.9.0] - 2026-04-03
 
 ### Added
