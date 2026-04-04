@@ -5,6 +5,169 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.15.0] - 2026-04-03
+
+### Added
+- Time Machine Backup Status extension attribute script
+  - Runs `tmutil destinationinfo` to detect configured backup destinations
+  - Runs `tmutil latestbackup` to retrieve the path of the most recent snapshot
+  - Parses the snapshot directory name (YYYY-MM-DD-HHMMSS) to produce a human-readable date
+  - Returns "Not Configured" if no Time Machine destination is set up
+  - Returns "Last Backup: Never" when a destination exists but no backup has completed
+  - Common use cases:
+    - Identify devices that have not backed up recently (e.g., >7 days) for user follow-up
+    - Verify that Time Machine is configured before decommissioning or wiping a device
+    - Monitor backup health across remote or hybrid worker devices
+
+### Changed
+- Updated repository version to 2.15.0
+
+## [2.14.0] - 2026-04-03
+
+### Added
+- Battery Health and Cycle Count extension attribute script
+  - Parses `system_profiler SPPowerDataType` for Condition, Cycle Count, and Maximum Capacity
+  - Returns "Desktop Mac (No Battery)" when no cycle count data is present (Mac mini, Mac Pro, iMac)
+  - Normalises Maximum Capacity output to always include a `%` suffix when a raw number is returned
+  - Common use cases:
+    - Identify laptops with degraded battery health (Service Recommended) for proactive replacement
+    - Track average cycle count across the fleet to forecast battery refresh cycles
+    - Include battery state in device health dashboards or asset management reports
+
+### Changed
+- Updated repository version to 2.14.0
+
+## [2.13.0] - 2026-04-03
+
+### Added
+- Mail App Configured Accounts extension attribute script
+  - Iterates all local users with UID ≥ 500
+  - Searches for Accounts.plist across Mail V8/V9/V10 data directories
+  - Uses `python3 plistlib` to parse binary and XML plists safely
+  - Recursively searches for `AccountEmailAddress` / `EmailAddress` keys containing `@`
+  - Deduplicates email addresses across all users and returns a comma-separated list
+  - Returns "No Accounts Configured" when no Mail accounts are found
+  - Common use cases:
+    - Verify that corporate email accounts are configured in Mail on managed devices
+    - Detect personal email accounts added alongside corporate accounts
+    - Audit Mail account configuration before decommissioning or reassigning a device
+
+### Changed
+- Updated repository version to 2.13.0
+
+## [2.12.0] - 2026-04-03
+
+### Added
+- MDM Configuration Profile Audit extension attribute script
+  - Runs `profiles list -all` and parses `profileDisplayName` fields
+  - Returns the total count and comma-separated display names of all installed profiles
+  - Returns "0 profiles installed" when no profiles are present
+  - Common use cases:
+    - Verify that all required baseline configuration profiles have been applied
+    - Identify devices that are missing critical security or compliance profiles
+    - Audit profile count as a quick sanity-check after an MDM migration or re-enrolment
+
+### Changed
+- Updated repository version to 2.12.0
+
+## [2.11.0] - 2026-04-03
+
+### Added
+- TCC Full Disk Access Apps extension attribute script
+  - Queries the system TCC database at `/Library/Application Support/com.apple.TCC/TCC.db`
+  - Filters on `service='kTCCServiceSystemPolicyAllFiles'` and `auth_value=2` (allowed)
+  - Returns a sorted, comma-separated list of bundle IDs / app paths with Full Disk Access
+  - Returns "None Granted" if the database is empty or no entries match
+  - Requires the Jamf management framework to have Full Disk Access itself to read the system TCC database
+  - Common use cases:
+    - Audit which apps have Full Disk Access across the fleet
+    - Detect unexpected or unauthorised FDA grants that could be an indicator of compromise
+    - Validate that required security tools (EDR, backup agents) have received FDA
+
+### Changed
+- Updated repository version to 2.11.0
+
+## [2.10.0] - 2026-04-03
+
+### Added
+- Local User Password Age extension attribute script
+  - Iterates all local users with UID ≥ 500 via `dscl . -list /Users`
+  - Reads `passwordLastSetTime` from Directory Services for each user
+  - Converts from Apple Core Data epoch (2001-01-01) to Unix epoch and calculates age in days
+  - Returns a pipe-delimited per-user summary (e.g., "alice: 45 days | bob: 120 days")
+  - Returns "No Local Users Found" when no standard accounts are present
+  - Common use cases:
+    - Identify users who have not changed their password within your policy window
+    - Enforce password rotation policies by scoping reminders to affected devices
+    - Audit password age across the fleet ahead of a compliance review
+
+### Changed
+- Updated repository version to 2.10.0
+
+## [2.9.0] - 2026-04-03
+
+### Added
+- Pending macOS Software Updates extension attribute script
+  - Runs `softwareupdate -l` and parses lines beginning with `*` to extract update names
+  - Returns a count and comma-separated list of pending update names
+  - Returns "0 updates pending" when the system is fully up to date
+  - Common use cases:
+    - Identify devices with outstanding security updates for compliance reporting
+    - Scope an aggressive update-force policy to devices with pending macOS updates
+    - Track update adoption rates across the fleet after a new OS or security patch release
+
+### Changed
+- Updated repository version to 2.9.0
+
+## [2.8.0] - 2026-04-03
+
+### Added
+- Homebrew Package Audit extension attribute script
+  - Detects Homebrew at `/opt/homebrew/bin/brew` (Apple Silicon) and `/usr/local/bin/brew` (Intel)
+  - Runs `brew list --formula` as the console user via `sudo -u`
+  - Returns a newline-separated list of installed formula names
+  - Returns "Homebrew Not Installed" if no brew binary is found
+  - Returns "No User Logged In" when running without an active console session
+  - Common use cases:
+    - Audit unapproved developer tools installed via Homebrew across the fleet
+    - Detect security-sensitive packages (e.g., nmap, netcat, john) on managed devices
+    - Track Homebrew adoption before rolling out a managed package solution
+
+### Changed
+- Updated repository version to 2.8.0
+
+## [2.7.0] - 2026-04-03
+
+### Added
+- XProtect Version and Currency extension attribute script
+  - Reads the installed XProtect version from `XProtect.meta.plist`
+  - Fetches the latest published version from the SOFA macOS data feed (sofafeed.macadmins.io)
+  - Compares local vs. latest and returns "Current" or "Outdated"
+  - Falls back to "Unknown" status if the SOFA feed is unreachable (no network, proxy block)
+  - Common use cases:
+    - Identify devices running outdated XProtect definitions that may be at higher malware risk
+    - Verify that Rapid Security Responses have propagated across the fleet
+    - Include XProtect currency in security compliance reporting dashboards
+
+### Changed
+- Updated repository version to 2.7.0
+
+## [2.6.0] - 2026-04-03
+
+### Added
+- Bootstrap Token Escrow Status extension attribute script
+  - Runs `profiles status -type bootstraptoken` to query MDM escrow state
+  - Returns "Escrowed" when the Bootstrap Token has been sent to and confirmed by MDM
+  - Returns "Not Escrowed" when a token exists but has not been escrowed
+  - Returns "Not Supported" on devices or OS versions that do not support Bootstrap Token
+  - Common use cases:
+    - Ensure Bootstrap Tokens are escrowed before relying on MDM-driven FileVault recovery
+    - Identify devices that failed to escrow after enrolment or a re-enrolment event
+    - Audit Bootstrap Token state as part of a Zero Touch deployment validation workflow
+
+### Changed
+- Updated repository version to 2.6.0
+
 ## [2.5.0] - 2026-04-03
 
 ### Added

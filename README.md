@@ -405,6 +405,205 @@ Reports the current Secure Boot security policy level. Differentiates between Ap
 **Use Case:**
 Audit and enforce Secure Boot policy across the fleet. Create Smart Groups for devices with Reduced or Permissive Security to trigger remediation, validate that MDM security baseline policies have been applied, and ensure kext-dependent software doesn't inadvertently lower security posture across the environment.
 
+### 24. Time Machine Backup Status
+
+**File:** `extension-attributes/time-machine-backup-status.zsh`
+
+**Description:**
+Reports the last Time Machine backup date and destination name. Identifies devices that have never backed up or have no Time Machine destination configured.
+
+**Detection Method:**
+- `tmutil destinationinfo` — retrieves the configured backup destination name
+- `tmutil latestbackup` — returns the path of the most recent completed snapshot
+- Parses the snapshot directory name (`YYYY-MM-DD-HHMMSS`) to produce a readable timestamp
+
+**Possible Results:**
+- `Last Backup: YYYY-MM-DD HH:MM | Destination: NAME | Status: OK` - Backup found
+- `Last Backup: Never | Destination: NAME | Status: OK` - Destination set but no backup yet
+- `Not Configured` - No Time Machine destination is configured
+
+**Use Case:**
+Create a Smart Group for devices with "Last Backup: Never" or devices whose last backup date is older than your policy threshold. Scope a Self Service notification or a Jamf Notify alert to remind users to connect their backup drive or configure Time Machine.
+
+### 23. Battery Health and Cycle Count
+
+**File:** `extension-attributes/battery-health-and-cycle-count.zsh`
+
+**Description:**
+Reports battery condition, cycle count, and maximum capacity for MacBook models. Returns a fixed result for desktop Macs that have no battery.
+
+**Detection Method:**
+- Runs `system_profiler SPPowerDataType`
+- Extracts `Condition`, `Cycle Count`, and `Maximum Capacity` fields
+- Uses absence of `Cycle Count` data to identify desktop Macs
+
+**Possible Results:**
+- `Condition: Normal | Cycle Count: N | Max Capacity: N%` - Healthy battery
+- `Condition: Service Recommended | Cycle Count: N | Max Capacity: N%` - Battery needs replacement
+- `Desktop Mac (No Battery)` - Mac mini, Mac Pro, iMac, or Mac Studio
+
+**Use Case:**
+Create a Smart Group for laptops with "Condition: Service Recommended" to proactively identify devices needing battery replacement before users experience unexpected shutdowns. Track cycle count trends to forecast fleet-wide battery refresh cycles.
+
+### 22. Mail App Configured Accounts
+
+**File:** `extension-attributes/mail-app-configured-accounts.zsh`
+
+**Description:**
+Lists email addresses configured in the macOS Mail app for all local users by parsing Mail account plists with `python3 plistlib`. Works with binary and XML plists across Mail V8/V9/V10 data directories.
+
+**Detection Method:**
+- Iterates local users with UID ≥ 500
+- Searches Mail data directories (`~/Library/Mail/V8–V10/MailData/Accounts.plist`)
+- Recursively finds keys matching `AccountEmailAddress` / `EmailAddress` containing `@`
+- Deduplicates email addresses across all users
+
+**Possible Results:**
+- `user@corp.com, user@personal.com` - Comma-separated list of configured email addresses
+- `No Accounts Configured` - No Mail accounts found for any local user
+
+**Use Case:**
+Verify that managed devices have corporate email configured in Mail. Detect personal email accounts that may be in violation of acceptable use policy. Useful for auditing Mail configuration before device reassignment or decommission.
+
+### 21. MDM Configuration Profile Audit
+
+**File:** `extension-attributes/mdm-configuration-profile-audit.zsh`
+
+**Description:**
+Reports the total number and display names of all MDM configuration profiles installed on the device. Useful for verifying that required profiles are present and auditing unexpected profiles.
+
+**Detection Method:**
+- Runs `profiles list -all`
+- Parses `profileDisplayName` fields from the output
+
+**Possible Results:**
+- `N profile(s) installed: name1, name2, ...` - Comma-separated list with count
+- `0 profiles installed` - No profiles found
+
+**Use Case:**
+Verify that every device has the expected set of baseline security and compliance profiles. Create Smart Groups for devices with a profile count below a threshold or for devices missing a specific profile name string. Also useful after an MDM migration to confirm all profiles have re-applied successfully.
+
+### 20. TCC Full Disk Access Apps
+
+**File:** `extension-attributes/tcc-full-disk-access-apps.zsh`
+
+**Description:**
+Lists all applications that have been granted Full Disk Access (FDA) by querying the system TCC database. Full Disk Access is a high-privilege TCC permission that allows apps to read all files on the system.
+
+**Detection Method:**
+- Queries `/Library/Application Support/com.apple.TCC/TCC.db` via `sqlite3`
+- Filters on `service = 'kTCCServiceSystemPolicyAllFiles'` and `auth_value = 2` (allowed)
+- Deduplicates and sorts results
+
+**Requirements:**
+The Jamf management framework must have Full Disk Access granted in System Settings to read the system TCC database. Grant this via a PPPC (Privacy Preferences Policy Control) profile.
+
+**Possible Results:**
+- `com.vendor.app, /path/to/tool, ...` - Comma-separated bundle IDs / paths with FDA
+- `None Granted` - No apps have Full Disk Access
+
+**Use Case:**
+Audit which applications have Full Disk Access across the fleet. Detect unexpected grants that may indicate a compromised or misconfigured device. Validate that required security tools (EDR agents, backup software) have received FDA after a PPPC profile deployment.
+
+### 19. Local User Password Age
+
+**File:** `extension-attributes/local-user-password-age.zsh`
+
+**Description:**
+Reports how many days have elapsed since each local standard user (UID ≥ 500) last changed their password. Uses Directory Services to read `passwordLastSetTime` for each account.
+
+**Detection Method:**
+- Lists all local users via `dscl . -list /Users`
+- Filters to UID ≥ 500 (standard/admin users)
+- Reads `passwordLastSetTime` and converts from Apple Core Data epoch to days elapsed
+
+**Possible Results:**
+- `user1: N days | user2: N days` - Days since last password change per user
+- `No Local Users Found` - No standard local accounts present
+
+**Use Case:**
+Identify devices with users who have not rotated their password within your policy window (e.g., 90 days). Create a Smart Group using a "greater than" criteria on the result and scope a Jamf Notify or Self Service reminder policy to prompt users to change their password.
+
+### 18. Pending macOS Software Updates
+
+**File:** `extension-attributes/pending-macos-software-updates.zsh`
+
+**Description:**
+Reports the number and names of pending Apple software updates. Allows Smart Groups and policies to target devices with outstanding updates.
+
+**Detection Method:**
+- Runs `softwareupdate -l`
+- Parses lines starting with `*` to extract pending update names
+- Checks for "No new software available" to confirm a clean state
+
+**Possible Results:**
+- `N update(s) pending: name1, name2, ...` - Updates are available
+- `0 updates pending` - Device is fully up to date
+
+**Use Case:**
+Create Smart Groups for devices with any pending updates to scope deferred-update nudge policies or force-install policies for critical security patches. Track how quickly new OS updates propagate across the fleet after release.
+
+### 17. Homebrew Package Audit
+
+**File:** `extension-attributes/homebrew-package-audit.zsh`
+
+**Description:**
+Lists all Homebrew formulae installed for the console user. Useful for auditing developer tools, detecting unapproved software, and tracking package sprawl across managed Macs.
+
+**Detection Method:**
+- Identifies the console user via `stat -f "%Su" /dev/console`
+- Searches for the `brew` binary at `/opt/homebrew/bin/brew` (Apple Silicon) and `/usr/local/bin/brew` (Intel)
+- Runs `brew list --formula` as the console user
+
+**Possible Results:**
+- Newline-separated list of installed formula names
+- `No Formulae Installed` - Homebrew is present but no formulae are installed
+- `Homebrew Not Installed` - No `brew` binary found
+- `No User Logged In` - No active console session
+
+**Use Case:**
+Identify devices where users have installed security-sensitive tools (nmap, netcat, john, hashcat) or unapproved software via Homebrew. Create Smart Groups scoped to devices with specific package names to trigger policy enforcement or user notifications. Also useful for planning a managed Homebrew rollout to replace ad-hoc installations.
+
+### 16. XProtect Version and Currency
+
+**File:** `extension-attributes/xprotect-version-and-currency.zsh`
+
+**Description:**
+Reports the installed XProtect version and whether it matches the latest version published in the SOFA macOS data feed. Helps identify devices with stale malware definitions.
+
+**Detection Method:**
+- Reads `Version` key from `/Library/Apple/System/Library/CoreServices/XProtect.bundle/Contents/Resources/XProtect.meta.plist`
+- Fetches the SOFA macOS data feed (`sofafeed.macadmins.io`) via `curl`
+- Compares local version against the latest published `com.apple.XProtect` payload version
+
+**Possible Results:**
+- `Version: X | Status: Current` - Installed version matches the SOFA feed
+- `Version: X | Status: Outdated` - A newer version is available
+- `Version: X | Status: Unknown` - SOFA feed was unreachable; version shown but currency unknown
+- `Not Found` - XProtect meta plist missing (unusual)
+
+**Use Case:**
+Create a Smart Group for devices with "Status: Outdated" to identify machines where XProtect updates have stalled. Pair with a policy to trigger a software update check, or alert the security team when a significant portion of the fleet falls behind.
+
+### 15. Bootstrap Token Escrow Status
+
+**File:** `extension-attributes/bootstrap-token-escrow-status.zsh`
+
+**Description:**
+Reports whether the device's Bootstrap Token has been escrowed with the MDM server. The Bootstrap Token is required for MDM-managed FileVault recovery key rotation and Erase All Content and Settings (EACS) on Apple Silicon.
+
+**Detection Method:**
+- Runs `profiles status -type bootstraptoken`
+- Parses the "escrowed to server" field from the output
+
+**Possible Results:**
+- `Escrowed` - Bootstrap Token has been successfully sent to and confirmed by MDM
+- `Not Escrowed` - Token exists locally but has not been delivered to MDM
+- `Not Supported` - Device or macOS version does not support Bootstrap Token
+
+**Use Case:**
+Bootstrap Token escrow is a prerequisite for MDM-driven FileVault recovery key rotation and Erase All Content and Settings on Apple Silicon. Create a Smart Group for devices where the token is "Not Escrowed" and scope a re-enrolment or Bootstrap Token re-escrow policy to remediate.
+
 ## Installation
 
 ### Adding to Jamf Pro
@@ -423,7 +622,7 @@ Audit and enforce Secure Boot policy across the fleet. Create Smart Groups for d
 
 ### Running Scripts Locally for Testing
 
-```bash
+```zsh
 # Make script executable
 chmod +x extension-attributes/apple-intelligence-readiness.sh
 
@@ -452,12 +651,12 @@ When adding new extension attributes to this repository:
    - Author and version
 4. Update this README with script details
 5. Add an entry to `CHANGELOG.md`
-6. Follow bash best practices and handle errors gracefully
+6. Follow zsh best practices and handle errors gracefully
 
 ## Script Standards
 
 All scripts in this repository should:
-- Use bash as the interpreter (`#!/bin/bash`)
+- Use zsh as the interpreter (`#!/bin/zsh`)
 - Output in Jamf-compatible format: `<result>VALUE</result>`
 - Include comprehensive comments
 - Handle errors gracefully
