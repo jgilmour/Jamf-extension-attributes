@@ -405,6 +405,24 @@ Reports the current Secure Boot security policy level. Differentiates between Ap
 **Use Case:**
 Audit and enforce Secure Boot policy across the fleet. Create Smart Groups for devices with Reduced or Permissive Security to trigger remediation, validate that MDM security baseline policies have been applied, and ensure kext-dependent software doesn't inadvertently lower security posture across the environment.
 
+### 21. MDM Configuration Profile Audit
+
+**File:** `extension-attributes/mdm-configuration-profile-audit.zsh`
+
+**Description:**
+Reports the total number and display names of all MDM configuration profiles installed on the device. Useful for verifying that required profiles are present and auditing unexpected profiles.
+
+**Detection Method:**
+- Runs `profiles list -all`
+- Parses `profileDisplayName` fields from the output
+
+**Possible Results:**
+- `N profile(s) installed: name1, name2, ...` - Comma-separated list with count
+- `0 profiles installed` - No profiles found
+
+**Use Case:**
+Verify that every device has the expected set of baseline security and compliance profiles. Create Smart Groups for devices with a profile count below a threshold or for devices missing a specific profile name string. Also useful after an MDM migration to confirm all profiles have re-applied successfully.
+
 ### 20. TCC Full Disk Access Apps
 
 **File:** `extension-attributes/tcc-full-disk-access-apps.zsh`

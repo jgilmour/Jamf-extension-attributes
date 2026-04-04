@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.12.0] - 2026-04-03
+
+### Added
+- MDM Configuration Profile Audit extension attribute script
+  - Runs `profiles list -all` and parses `profileDisplayName` fields
+  - Returns the total count and comma-separated display names of all installed profiles
+  - Returns "0 profiles installed" when no profiles are present
+  - Common use cases:
+    - Verify that all required baseline configuration profiles have been applied
+    - Identify devices that are missing critical security or compliance profiles
+    - Audit profile count as a quick sanity-check after an MDM migration or re-enrolment
+
+### Changed
+- Updated repository version to 2.12.0
+
 ## [2.11.0] - 2026-04-03
 
 ### Added
