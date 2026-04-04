@@ -405,6 +405,26 @@ Reports the current Secure Boot security policy level. Differentiates between Ap
 **Use Case:**
 Audit and enforce Secure Boot policy across the fleet. Create Smart Groups for devices with Reduced or Permissive Security to trigger remediation, validate that MDM security baseline policies have been applied, and ensure kext-dependent software doesn't inadvertently lower security posture across the environment.
 
+### 23. Battery Health and Cycle Count
+
+**File:** `extension-attributes/battery-health-and-cycle-count.zsh`
+
+**Description:**
+Reports battery condition, cycle count, and maximum capacity for MacBook models. Returns a fixed result for desktop Macs that have no battery.
+
+**Detection Method:**
+- Runs `system_profiler SPPowerDataType`
+- Extracts `Condition`, `Cycle Count`, and `Maximum Capacity` fields
+- Uses absence of `Cycle Count` data to identify desktop Macs
+
+**Possible Results:**
+- `Condition: Normal | Cycle Count: N | Max Capacity: N%` - Healthy battery
+- `Condition: Service Recommended | Cycle Count: N | Max Capacity: N%` - Battery needs replacement
+- `Desktop Mac (No Battery)` - Mac mini, Mac Pro, iMac, or Mac Studio
+
+**Use Case:**
+Create a Smart Group for laptops with "Condition: Service Recommended" to proactively identify devices needing battery replacement before users experience unexpected shutdowns. Track cycle count trends to forecast fleet-wide battery refresh cycles.
+
 ### 22. Mail App Configured Accounts
 
 **File:** `extension-attributes/mail-app-configured-accounts.zsh`

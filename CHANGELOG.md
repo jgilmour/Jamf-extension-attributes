@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.14.0] - 2026-04-03
+
+### Added
+- Battery Health and Cycle Count extension attribute script
+  - Parses `system_profiler SPPowerDataType` for Condition, Cycle Count, and Maximum Capacity
+  - Returns "Desktop Mac (No Battery)" when no cycle count data is present (Mac mini, Mac Pro, iMac)
+  - Normalises Maximum Capacity output to always include a `%` suffix when a raw number is returned
+  - Common use cases:
+    - Identify laptops with degraded battery health (Service Recommended) for proactive replacement
+    - Track average cycle count across the fleet to forecast battery refresh cycles
+    - Include battery state in device health dashboards or asset management reports
+
+### Changed
+- Updated repository version to 2.14.0
+
 ## [2.13.0] - 2026-04-03
 
 ### Added
