@@ -622,7 +622,7 @@ Bootstrap Token escrow is a prerequisite for MDM-driven FileVault recovery key r
 
 ### Running Scripts Locally for Testing
 
-```bash
+```zsh
 # Make script executable
 chmod +x extension-attributes/apple-intelligence-readiness.sh
 
@@ -651,12 +651,12 @@ When adding new extension attributes to this repository:
    - Author and version
 4. Update this README with script details
 5. Add an entry to `CHANGELOG.md`
-6. Follow bash best practices and handle errors gracefully
+6. Follow zsh best practices and handle errors gracefully
 
 ## Script Standards
 
 All scripts in this repository should:
-- Use bash as the interpreter (`#!/bin/bash`)
+- Use zsh as the interpreter (`#!/bin/zsh`)
 - Output in Jamf-compatible format: `<result>VALUE</result>`
 - Include comprehensive comments
 - Handle errors gracefully
