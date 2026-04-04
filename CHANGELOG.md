@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.15.0] - 2026-04-03
+
+### Added
+- Time Machine Backup Status extension attribute script
+  - Runs `tmutil destinationinfo` to detect configured backup destinations
+  - Runs `tmutil latestbackup` to retrieve the path of the most recent snapshot
+  - Parses the snapshot directory name (YYYY-MM-DD-HHMMSS) to produce a human-readable date
+  - Returns "Not Configured" if no Time Machine destination is set up
+  - Returns "Last Backup: Never" when a destination exists but no backup has completed
+  - Common use cases:
+    - Identify devices that have not backed up recently (e.g., >7 days) for user follow-up
+    - Verify that Time Machine is configured before decommissioning or wiping a device
+    - Monitor backup health across remote or hybrid worker devices
+
+### Changed
+- Updated repository version to 2.15.0
+
 ## [2.14.0] - 2026-04-03
 
 ### Added

@@ -405,6 +405,26 @@ Reports the current Secure Boot security policy level. Differentiates between Ap
 **Use Case:**
 Audit and enforce Secure Boot policy across the fleet. Create Smart Groups for devices with Reduced or Permissive Security to trigger remediation, validate that MDM security baseline policies have been applied, and ensure kext-dependent software doesn't inadvertently lower security posture across the environment.
 
+### 24. Time Machine Backup Status
+
+**File:** `extension-attributes/time-machine-backup-status.zsh`
+
+**Description:**
+Reports the last Time Machine backup date and destination name. Identifies devices that have never backed up or have no Time Machine destination configured.
+
+**Detection Method:**
+- `tmutil destinationinfo` — retrieves the configured backup destination name
+- `tmutil latestbackup` — returns the path of the most recent completed snapshot
+- Parses the snapshot directory name (`YYYY-MM-DD-HHMMSS`) to produce a readable timestamp
+
+**Possible Results:**
+- `Last Backup: YYYY-MM-DD HH:MM | Destination: NAME | Status: OK` - Backup found
+- `Last Backup: Never | Destination: NAME | Status: OK` - Destination set but no backup yet
+- `Not Configured` - No Time Machine destination is configured
+
+**Use Case:**
+Create a Smart Group for devices with "Last Backup: Never" or devices whose last backup date is older than your policy threshold. Scope a Self Service notification or a Jamf Notify alert to remind users to connect their backup drive or configure Time Machine.
+
 ### 23. Battery Health and Cycle Count
 
 **File:** `extension-attributes/battery-health-and-cycle-count.zsh`
