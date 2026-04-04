@@ -405,6 +405,25 @@ Reports the current Secure Boot security policy level. Differentiates between Ap
 **Use Case:**
 Audit and enforce Secure Boot policy across the fleet. Create Smart Groups for devices with Reduced or Permissive Security to trigger remediation, validate that MDM security baseline policies have been applied, and ensure kext-dependent software doesn't inadvertently lower security posture across the environment.
 
+### 15. Bootstrap Token Escrow Status
+
+**File:** `extension-attributes/bootstrap-token-escrow-status.zsh`
+
+**Description:**
+Reports whether the device's Bootstrap Token has been escrowed with the MDM server. The Bootstrap Token is required for MDM-managed FileVault recovery key rotation and Erase All Content and Settings (EACS) on Apple Silicon.
+
+**Detection Method:**
+- Runs `profiles status -type bootstraptoken`
+- Parses the "escrowed to server" field from the output
+
+**Possible Results:**
+- `Escrowed` - Bootstrap Token has been successfully sent to and confirmed by MDM
+- `Not Escrowed` - Token exists locally but has not been delivered to MDM
+- `Not Supported` - Device or macOS version does not support Bootstrap Token
+
+**Use Case:**
+Bootstrap Token escrow is a prerequisite for MDM-driven FileVault recovery key rotation and Erase All Content and Settings on Apple Silicon. Create a Smart Group for devices where the token is "Not Escrowed" and scope a re-enrolment or Bootstrap Token re-escrow policy to remediate.
+
 ## Installation
 
 ### Adding to Jamf Pro

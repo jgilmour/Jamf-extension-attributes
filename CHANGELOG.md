@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] - 2026-04-03
+
+### Added
+- Bootstrap Token Escrow Status extension attribute script
+  - Runs `profiles status -type bootstraptoken` to query MDM escrow state
+  - Returns "Escrowed" when the Bootstrap Token has been sent to and confirmed by MDM
+  - Returns "Not Escrowed" when a token exists but has not been escrowed
+  - Returns "Not Supported" on devices or OS versions that do not support Bootstrap Token
+  - Common use cases:
+    - Ensure Bootstrap Tokens are escrowed before relying on MDM-driven FileVault recovery
+    - Identify devices that failed to escrow after enrolment or a re-enrolment event
+    - Audit Bootstrap Token state as part of a Zero Touch deployment validation workflow
+
+### Changed
+- Updated repository version to 2.6.0
+
 ## [2.5.0] - 2026-04-03
 
 ### Added
