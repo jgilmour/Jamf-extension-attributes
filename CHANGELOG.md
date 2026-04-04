@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.0] - 2026-04-03
+
+### Added
+- XProtect Version and Currency extension attribute script
+  - Reads the installed XProtect version from `XProtect.meta.plist`
+  - Fetches the latest published version from the SOFA macOS data feed (sofafeed.macadmins.io)
+  - Compares local vs. latest and returns "Current" or "Outdated"
+  - Falls back to "Unknown" status if the SOFA feed is unreachable (no network, proxy block)
+  - Common use cases:
+    - Identify devices running outdated XProtect definitions that may be at higher malware risk
+    - Verify that Rapid Security Responses have propagated across the fleet
+    - Include XProtect currency in security compliance reporting dashboards
+
+### Changed
+- Updated repository version to 2.7.0
+
 ## [2.6.0] - 2026-04-03
 
 ### Added

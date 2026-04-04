@@ -405,6 +405,27 @@ Reports the current Secure Boot security policy level. Differentiates between Ap
 **Use Case:**
 Audit and enforce Secure Boot policy across the fleet. Create Smart Groups for devices with Reduced or Permissive Security to trigger remediation, validate that MDM security baseline policies have been applied, and ensure kext-dependent software doesn't inadvertently lower security posture across the environment.
 
+### 16. XProtect Version and Currency
+
+**File:** `extension-attributes/xprotect-version-and-currency.zsh`
+
+**Description:**
+Reports the installed XProtect version and whether it matches the latest version published in the SOFA macOS data feed. Helps identify devices with stale malware definitions.
+
+**Detection Method:**
+- Reads `Version` key from `/Library/Apple/System/Library/CoreServices/XProtect.bundle/Contents/Resources/XProtect.meta.plist`
+- Fetches the SOFA macOS data feed (`sofafeed.macadmins.io`) via `curl`
+- Compares local version against the latest published `com.apple.XProtect` payload version
+
+**Possible Results:**
+- `Version: X | Status: Current` - Installed version matches the SOFA feed
+- `Version: X | Status: Outdated` - A newer version is available
+- `Version: X | Status: Unknown` - SOFA feed was unreachable; version shown but currency unknown
+- `Not Found` - XProtect meta plist missing (unusual)
+
+**Use Case:**
+Create a Smart Group for devices with "Status: Outdated" to identify machines where XProtect updates have stalled. Pair with a policy to trigger a software update check, or alert the security team when a significant portion of the fleet falls behind.
+
 ### 15. Bootstrap Token Escrow Status
 
 **File:** `extension-attributes/bootstrap-token-escrow-status.zsh`
