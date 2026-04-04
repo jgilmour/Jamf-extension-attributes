@@ -405,6 +405,26 @@ Reports the current Secure Boot security policy level. Differentiates between Ap
 **Use Case:**
 Audit and enforce Secure Boot policy across the fleet. Create Smart Groups for devices with Reduced or Permissive Security to trigger remediation, validate that MDM security baseline policies have been applied, and ensure kext-dependent software doesn't inadvertently lower security posture across the environment.
 
+### 22. Mail App Configured Accounts
+
+**File:** `extension-attributes/mail-app-configured-accounts.zsh`
+
+**Description:**
+Lists email addresses configured in the macOS Mail app for all local users by parsing Mail account plists with `python3 plistlib`. Works with binary and XML plists across Mail V8/V9/V10 data directories.
+
+**Detection Method:**
+- Iterates local users with UID ≥ 500
+- Searches Mail data directories (`~/Library/Mail/V8–V10/MailData/Accounts.plist`)
+- Recursively finds keys matching `AccountEmailAddress` / `EmailAddress` containing `@`
+- Deduplicates email addresses across all users
+
+**Possible Results:**
+- `user@corp.com, user@personal.com` - Comma-separated list of configured email addresses
+- `No Accounts Configured` - No Mail accounts found for any local user
+
+**Use Case:**
+Verify that managed devices have corporate email configured in Mail. Detect personal email accounts that may be in violation of acceptable use policy. Useful for auditing Mail configuration before device reassignment or decommission.
+
 ### 21. MDM Configuration Profile Audit
 
 **File:** `extension-attributes/mdm-configuration-profile-audit.zsh`

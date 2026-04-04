@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.0] - 2026-04-03
+
+### Added
+- Mail App Configured Accounts extension attribute script
+  - Iterates all local users with UID ≥ 500
+  - Searches for Accounts.plist across Mail V8/V9/V10 data directories
+  - Uses `python3 plistlib` to parse binary and XML plists safely
+  - Recursively searches for `AccountEmailAddress` / `EmailAddress` keys containing `@`
+  - Deduplicates email addresses across all users and returns a comma-separated list
+  - Returns "No Accounts Configured" when no Mail accounts are found
+  - Common use cases:
+    - Verify that corporate email accounts are configured in Mail on managed devices
+    - Detect personal email accounts added alongside corporate accounts
+    - Audit Mail account configuration before decommissioning or reassigning a device
+
+### Changed
+- Updated repository version to 2.13.0
+
 ## [2.12.0] - 2026-04-03
 
 ### Added
