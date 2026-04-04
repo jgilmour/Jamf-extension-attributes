@@ -11,7 +11,7 @@ Extension attributes in Jamf Pro allow administrators to collect custom inventor
 ```
 jamf-extension-attributes/
 ├── extension-attributes/     # Extension attribute scripts
-│   └── *.sh                 # Individual scripts
+│   └── *.zsh                # Individual scripts
 ├── CHANGELOG.md             # Version history and changes
 ├── LICENSE                  # License information
 └── README.md               # This file
@@ -21,7 +21,7 @@ jamf-extension-attributes/
 
 ### 1. Apple Intelligence Readiness Check
 
-**File:** `extension-attributes/apple-intelligence-readiness.sh`
+**File:** `extension-attributes/apple-intelligence-readiness.zsh`
 
 **Description:**
 Determines if a Mac is capable of running Apple Intelligence features by checking hardware requirements.
@@ -43,7 +43,7 @@ Identify which devices in your fleet can run Apple Intelligence features before 
 
 ### 2. Orphaned Home Directory Detector
 
-**File:** `extension-attributes/orphaned-home-directories.sh`
+**File:** `extension-attributes/orphaned-home-directories.zsh`
 
 **Description:**
 Identifies home directories in `/Users/` that no longer have corresponding user accounts. Helps administrators locate and reclaim disk space from deleted or reassigned accounts.
@@ -68,7 +68,7 @@ When computers are reassigned or users leave the organization, local accounts ar
 
 ### 3. Slow Charging Detection (Wattage Mismatch)
 
-**File:** `extension-attributes/slow-charging-detection.sh`
+**File:** `extension-attributes/slow-charging-detection.zsh`
 
 **Description:**
 Detects when a Mac is charging with an underpowered adapter that may cause performance issues or battery drain during use. Identifies users who are using USB-C hubs, phone chargers, or other low-wattage adapters instead of their MacBook's proper power adapter.
@@ -92,7 +92,7 @@ Users often experience performance degradation or battery drain while plugged in
 
 ### 4. Current Monitor Refresh Rate
 
-**File:** `extension-attributes/monitor-refresh-rate.sh`
+**File:** `extension-attributes/monitor-refresh-rate.zsh`
 
 **Description:**
 Reports the current refresh rate of the main display. Ensures ProMotion-capable MacBook Pros (120Hz) aren't accidentally locked to 60Hz and that external displays are running at optimal settings.
@@ -113,7 +113,7 @@ Creative agencies and organizations that invest in ProMotion MacBook Pros (120Hz
 
 ### 5. Default Web Browser
 
-**File:** `extension-attributes/default-web-browser.sh`
+**File:** `extension-attributes/default-web-browser.zsh`
 
 **Description:**
 Identifies which web browser is set as the default system-wide handler for HTTP/HTTPS URLs. Essential for application compatibility planning, security policy enforcement, and software standardization tracking.
@@ -143,7 +143,7 @@ Organizations need to track browser adoption for application compatibility testi
 
 ### 6. VPN Client Auto-Connect Status
 
-**File:** `extension-attributes/vpn-auto-connect-status.sh`
+**File:** `extension-attributes/vpn-auto-connect-status.zsh`
 
 **Description:**
 Checks if enterprise VPN clients are configured to auto-connect on startup. Ensures remote workers maintain security posture by automatically connecting to corporate VPN when starting their devices.
@@ -624,10 +624,10 @@ Bootstrap Token escrow is a prerequisite for MDM-driven FileVault recovery key r
 
 ```zsh
 # Make script executable
-chmod +x extension-attributes/apple-intelligence-readiness.sh
+chmod +x extension-attributes/apple-intelligence-readiness.zsh
 
 # Run the script
-./extension-attributes/apple-intelligence-readiness.sh
+./extension-attributes/apple-intelligence-readiness.zsh
 ```
 
 ## Best Practices
@@ -643,7 +643,7 @@ chmod +x extension-attributes/apple-intelligence-readiness.sh
 When adding new extension attributes to this repository:
 
 1. Place scripts in the `extension-attributes/` directory
-2. Use descriptive filenames (e.g., `check-something-specific.sh`)
+2. Use descriptive filenames (e.g., `check-something-specific.zsh`)
 3. Include header comments with:
    - Description
    - Requirements
