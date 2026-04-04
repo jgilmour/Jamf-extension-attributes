@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.0] - 2026-04-03
+
+### Added
+- TCC Full Disk Access Apps extension attribute script
+  - Queries the system TCC database at `/Library/Application Support/com.apple.TCC/TCC.db`
+  - Filters on `service='kTCCServiceSystemPolicyAllFiles'` and `auth_value=2` (allowed)
+  - Returns a sorted, comma-separated list of bundle IDs / app paths with Full Disk Access
+  - Returns "None Granted" if the database is empty or no entries match
+  - Requires the Jamf management framework to have Full Disk Access itself to read the system TCC database
+  - Common use cases:
+    - Audit which apps have Full Disk Access across the fleet
+    - Detect unexpected or unauthorised FDA grants that could be an indicator of compromise
+    - Validate that required security tools (EDR, backup agents) have received FDA
+
+### Changed
+- Updated repository version to 2.11.0
+
 ## [2.10.0] - 2026-04-03
 
 ### Added

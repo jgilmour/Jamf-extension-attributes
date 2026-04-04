@@ -405,6 +405,28 @@ Reports the current Secure Boot security policy level. Differentiates between Ap
 **Use Case:**
 Audit and enforce Secure Boot policy across the fleet. Create Smart Groups for devices with Reduced or Permissive Security to trigger remediation, validate that MDM security baseline policies have been applied, and ensure kext-dependent software doesn't inadvertently lower security posture across the environment.
 
+### 20. TCC Full Disk Access Apps
+
+**File:** `extension-attributes/tcc-full-disk-access-apps.zsh`
+
+**Description:**
+Lists all applications that have been granted Full Disk Access (FDA) by querying the system TCC database. Full Disk Access is a high-privilege TCC permission that allows apps to read all files on the system.
+
+**Detection Method:**
+- Queries `/Library/Application Support/com.apple.TCC/TCC.db` via `sqlite3`
+- Filters on `service = 'kTCCServiceSystemPolicyAllFiles'` and `auth_value = 2` (allowed)
+- Deduplicates and sorts results
+
+**Requirements:**
+The Jamf management framework must have Full Disk Access granted in System Settings to read the system TCC database. Grant this via a PPPC (Privacy Preferences Policy Control) profile.
+
+**Possible Results:**
+- `com.vendor.app, /path/to/tool, ...` - Comma-separated bundle IDs / paths with FDA
+- `None Granted` - No apps have Full Disk Access
+
+**Use Case:**
+Audit which applications have Full Disk Access across the fleet. Detect unexpected grants that may indicate a compromised or misconfigured device. Validate that required security tools (EDR agents, backup software) have received FDA after a PPPC profile deployment.
+
 ### 19. Local User Password Age
 
 **File:** `extension-attributes/local-user-password-age.zsh`
