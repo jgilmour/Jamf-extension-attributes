@@ -405,6 +405,25 @@ Reports the current Secure Boot security policy level. Differentiates between Ap
 **Use Case:**
 Audit and enforce Secure Boot policy across the fleet. Create Smart Groups for devices with Reduced or Permissive Security to trigger remediation, validate that MDM security baseline policies have been applied, and ensure kext-dependent software doesn't inadvertently lower security posture across the environment.
 
+### 18. Pending macOS Software Updates
+
+**File:** `extension-attributes/pending-macos-software-updates.zsh`
+
+**Description:**
+Reports the number and names of pending Apple software updates. Allows Smart Groups and policies to target devices with outstanding updates.
+
+**Detection Method:**
+- Runs `softwareupdate -l`
+- Parses lines starting with `*` to extract pending update names
+- Checks for "No new software available" to confirm a clean state
+
+**Possible Results:**
+- `N update(s) pending: name1, name2, ...` - Updates are available
+- `0 updates pending` - Device is fully up to date
+
+**Use Case:**
+Create Smart Groups for devices with any pending updates to scope deferred-update nudge policies or force-install policies for critical security patches. Track how quickly new OS updates propagate across the fleet after release.
+
 ### 17. Homebrew Package Audit
 
 **File:** `extension-attributes/homebrew-package-audit.zsh`

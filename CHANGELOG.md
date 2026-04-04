@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.0] - 2026-04-03
+
+### Added
+- Pending macOS Software Updates extension attribute script
+  - Runs `softwareupdate -l` and parses lines beginning with `*` to extract update names
+  - Returns a count and comma-separated list of pending update names
+  - Returns "0 updates pending" when the system is fully up to date
+  - Common use cases:
+    - Identify devices with outstanding security updates for compliance reporting
+    - Scope an aggressive update-force policy to devices with pending macOS updates
+    - Track update adoption rates across the fleet after a new OS or security patch release
+
+### Changed
+- Updated repository version to 2.9.0
+
 ## [2.8.0] - 2026-04-03
 
 ### Added
