@@ -405,6 +405,27 @@ Reports the current Secure Boot security policy level. Differentiates between Ap
 **Use Case:**
 Audit and enforce Secure Boot policy across the fleet. Create Smart Groups for devices with Reduced or Permissive Security to trigger remediation, validate that MDM security baseline policies have been applied, and ensure kext-dependent software doesn't inadvertently lower security posture across the environment.
 
+### 17. Homebrew Package Audit
+
+**File:** `extension-attributes/homebrew-package-audit.zsh`
+
+**Description:**
+Lists all Homebrew formulae installed for the console user. Useful for auditing developer tools, detecting unapproved software, and tracking package sprawl across managed Macs.
+
+**Detection Method:**
+- Identifies the console user via `stat -f "%Su" /dev/console`
+- Searches for the `brew` binary at `/opt/homebrew/bin/brew` (Apple Silicon) and `/usr/local/bin/brew` (Intel)
+- Runs `brew list --formula` as the console user
+
+**Possible Results:**
+- Newline-separated list of installed formula names
+- `No Formulae Installed` - Homebrew is present but no formulae are installed
+- `Homebrew Not Installed` - No `brew` binary found
+- `No User Logged In` - No active console session
+
+**Use Case:**
+Identify devices where users have installed security-sensitive tools (nmap, netcat, john, hashcat) or unapproved software via Homebrew. Create Smart Groups scoped to devices with specific package names to trigger policy enforcement or user notifications. Also useful for planning a managed Homebrew rollout to replace ad-hoc installations.
+
 ### 16. XProtect Version and Currency
 
 **File:** `extension-attributes/xprotect-version-and-currency.zsh`
